@@ -1,0 +1,15 @@
+input[type=button] {
+    width: 180px;
+    height: 30px;
+    background-color: rgb(109, 146, 155);
+    color: white;
+    font-family: Lato;
+    padding-left: auto;
+    padding-right: auto;
+    text-align: center;
+    font-size: 18px;
+    border-style: solid;
+    border-width: thin;
+    border-color: rgb(193, 218, 214);
+    border-radius: 3px;
+}
