@@ -1,5 +1,7 @@
 <?php
 session_start();
+define('CHARSET','UTF-8');
+header('Content-Type: text/html; charset=UTF-8');
 //para la base de datos
 $dsn = "sicenetxx"; //debe ser de sistema no de usuario
 $usuario = "administrador";
@@ -14,12 +16,11 @@ if (!$cid){
 }	
 ?>
 <!DOCTYPE html>
-<html lang="es-ES">
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-    <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
+   
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -91,7 +92,7 @@ if (!$cid){
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!--CREAR PAGINA PARA LA CAPTURA DE CALIFICACIONES--->
                         <h6 class="collapse-header">Calificaciones</h6>
-                        <a class="collapse-item" href="buttons.html">Parciales</a> 
+                        <a class="collapse-item" href="materias.php">Parciales</a> 
                         <a class="collapse-item" href="cards.html">Finales</a>
                     </div>
                 </div>
@@ -150,6 +151,7 @@ if (!$cid){
                                     <?php  
                                 
                                 echo $_SESSION['nombre'];
+                                echo " ";
                                 echo $_SESSION['apellidos'];
                                 
                             ?></span>
@@ -160,19 +162,7 @@ if (!$cid){
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400">
-
-                                    </i>
-
-                                    Perfil
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Configuraci&oacute;n
-                                </a>
-
-                                <div class="dropdown-divider"></div>
+                                
                                 <a class="dropdown-item" href="cerrar.php" data-toggle="modal"
                                     data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -191,9 +181,7 @@ if (!$cid){
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800">
-                        <?php
-                            echo $_SESSION['nombre'];
-                        ?>
+                        CALIFICACIONES PARCIALES
                     </h1>
 
                     <?php
@@ -233,7 +221,7 @@ if (!$cid){
                                 
                                 while(odbc_fetch_row($result,)){
                                     echo "<tr>";
-                                    echo "<td>".odbc_result($result,1)."</td>";
+                                    echo "<td>".utf8_encode(odbc_result($result,1))."</td>";
                                     echo "<td>".odbc_result($result,2)."</td>";
                                     echo "<td>".odbc_result($result,13)."</td>";
                                     //echo "<td>".odbc_result($result,4)."</td>";

@@ -1,6 +1,6 @@
 <?php
 session_start();
-//acceso a el sistema de boletas de calificaciones
+//acceso a el sistema de calificaciones
 $dsn = "sicenetxx"; //debe ser de sistema no de usuario
 $usuario = "administrador";
 $clave="";
@@ -31,8 +31,9 @@ if(isset($_POST["Usuario"],$_POST["Contrasena"],$_POST["loginacces"])){
          $_SESSION['nombre'] = odbc_result($result,3);
          $_SESSION['idD'] = odbc_result($result,4);
      
-        echo $_SESSION['nombre'];
         echo $_SESSION['apellidos'];
+        echo " ";
+        echo $_SESSION['nombre'];
         
         
         odbc_free_result($result); 
