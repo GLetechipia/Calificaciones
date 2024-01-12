@@ -9,7 +9,7 @@
             $password = "tooR";
             $dbname = "sicenetv2";
             $cid = new mysqli($servername, $username, $password, $dbname);
-            if ($conn->connect_error) {
+            if ($cid->connect_error) {
                 die("Connection failed: ".$cid->connect_error);
             } 
             return $cid;
@@ -37,5 +37,5 @@
 	    }
 	    echo "Rubro agregado!";*/
 	}
-    
+    odbc_close($cid);
 ?>

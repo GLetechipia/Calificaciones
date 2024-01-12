@@ -1,3 +1,7 @@
+<?php
+session_start();
+if(isset($_SESSION['IdMast'])) header("Location:menu.php");
+?>
 <!doctype html>
 <html lang="es">
   <head>
@@ -13,9 +17,7 @@
 <link href="bootstrap-4.4.1-dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
+      .bd-placeholder-img { font-size: 1.125rem;  text-anchor: middle;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
@@ -78,16 +80,16 @@ body {
   </head>
   <body class="text-center">
     <form class="form-signin" method="post" action="acceso.php" >
-  <img class="mb-4" src="img/LogoTecLoretoV2_4.svg" alt="" width="150" height="150">
-  <h1 class="h3 mb-3 font-weight-normal">Por favor escriba</h1>
-  <label for="Login" class="sr-only">Usuario</label>
-  <input type="text" name="Usuario" id="Usuario" class="form-control" placeholder="Usuario" required autofocus maxlength="20">
+    <img class="mb-4" src="img/LogoTecLoretoV2_4.svg" alt="" width="150" height="150">
+    <h1 class="h3 mb-3 font-weight-normal">Por favor escriba</h1>
+      <label for="Login" class="sr-only">Usuario</label>
+      <input type="text" name="Usuario" id="Usuario" class="form-control" placeholder="Usuario" required autofocus maxlength="20">
   
-  <label for="CveSICE" class="sr-only">Contraseña</label>
-  <input type="password" name="Contrasena" id="Contrasena" class="form-control" placeholder="Contraseña" required maxlength="20">
+      <label for="CveSICE" class="sr-only">Contraseña</label>
+      <input type="password" name="Contrasena" id="Contrasena" class="form-control" placeholder="Contraseña" required maxlength="20">
   
-  <button class="btn btn-lg btn-primary btn-block" type="submit" name="loginacces" value="acceso">Entrar</button>
-  <p class="mt-5 mb-3 text-muted">&copy; 2024</p>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" name="loginacces" value="acceso">Entrar</button>
+  <p class="mt-5 mb-3 text-muted">Copyright &copy; Tecnm Campus Loreto 2024</p>
 </form>
 </body>
 </html>

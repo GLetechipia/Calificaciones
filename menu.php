@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+if(!isset($_SESSION['IdMast'])) header("Location:index.php");
+
 //para la base de datos
 $dsn = "sicenetxx"; //debe ser de sistema no de usuario
 $usuario = "administrador";
@@ -31,7 +34,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Blank</title>
+    <title>SICENETXv2</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -51,7 +54,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <!---- AQUI VA LA IMAGEN DEL LOGO DEL TEC...---->
 
                 <img class="mb-4" src="img/LogoTecLoretoOriginal.svg" style="margin-top: 20px; height: 40px; width: 40px;">
@@ -77,7 +80,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Acciones
+                Periodo 2/2023
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -88,9 +91,9 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Calificaciones</h6>
-                        <a class="collapse-item" href="materias.php">Parciales</a>
-                        <a class="collapse-item" href="cards.html">Finales</a>
+                        <!--h6 class="collapse-header">Calificaciones</h6--->
+                        <a class="collapse-item" href="parciales.php">Parciales</a>
+                        <a class="collapse-item" href="finales.php">Finales</a>
                     </div>
                 </div>
             </li>
@@ -349,7 +352,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Copyright &copy; 2024</span>
                     </div>
                 </div>
             </footer>
@@ -371,15 +374,15 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">List@ para salir?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Seleccionaste "Logout", estas segur@ de terminar la sesión.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="cerrar.php">Logout</a>
                 </div>
             </div>
         </div>
@@ -396,5 +399,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
     <script src="js/sb-admin-2.min.js"></script>
 
 </body>
-
 </html>
+<?php
+odbc_close($cid);
+?>

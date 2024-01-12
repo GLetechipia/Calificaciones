@@ -8,7 +8,7 @@ $clave="";
 
 $cid=odbc_connect($dsn, $usuario, $clave);
 $sfkey = $_POST["sfkey"];
-
+echo $sfkey;
 if (!$cid){
 	exit("<strong>Ya ocurrido un error tratando de conectarse con el origen de datos.</strong>");
     
@@ -19,8 +19,6 @@ if (!$cid){
 <div class="row">
     <div class="col-xl-12 col-sm-6">
         <!------->
-
-
         <!--------------------------------------------------------------------------------------->
         <!--------------------------------------------------------------------------------------->
         <!--------------------------------------------------------------------------------------->
@@ -100,3 +98,4 @@ if (!$cid){
 
             </div>
         </div>
+<?php odbc_close($cid); ?>

@@ -1520,7 +1520,7 @@ pre code {
 
 .table-bordered thead th,
 .table-bordered thead td {
-  border-bottom-width: 2px;
+  border-bottom-width: 1px;
 }
 
 .table-borderless th,

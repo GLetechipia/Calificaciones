@@ -1,5 +1,7 @@
 <?php
 session_start();
+if(!isset($_SESSION['IdMast'])) header("Location:index.php");
+
 define('CHARSET','UTF-8');
 header('Content-Type: text/html; charset=UTF-8');
 //para la base de datos
@@ -59,7 +61,7 @@ if (!$cid){
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <!---- AQUI VA LA IMAGEN DEL LOGO DEL TEC...---->
 
                 <img class="mb-4" src="img/LogoTecLoretoOriginal.svg"
@@ -88,12 +90,12 @@ if (!$cid){
 
                     <span>Calificaciones</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!--CREAR PAGINA PARA LA CAPTURA DE CALIFICACIONES--->
                         <h6 class="collapse-header">Calificaciones</h6>
-                        <a class="collapse-item" href="materias.php">Parciales</a> 
-                        <a class="collapse-item" href="cards.html">Finales</a>
+                        <a class="collapse-item " href="parciales.php">Parciales</a> 
+                        <a class="collapse-item active" href="finales.php">Finales</a>
                     </div>
                 </div>
             </li>
@@ -135,17 +137,20 @@ if (!$cid){
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               
                                 <i class="fas fa-search fa-fw"></i>
                             </a>
 
                         </li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
-
+                        
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
+                            
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
 
                                     <?php  
@@ -181,7 +186,7 @@ if (!$cid){
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800">
-                        CALIFICACIONES PARCIALES
+                        CALIFICACIONES FINALES
                     </h1>
 
                     <?php
@@ -225,12 +230,12 @@ if (!$cid){
                                     echo "<td>".odbc_result($result,2)."</td>";
                                     echo "<td>".odbc_result($result,13)."</td>";
                                     //echo "<td>".odbc_result($result,4)."</td>";
-                                    echo "<td><button id=\"btnG\" type=\"button\" class=\"btn btn-primary\" onclick=\"verlista('".odbc_result($result,14)."');\">
-                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" fill=\"currentColor\" class=\"bi bi-people\" viewBox=\"0 0 16 16\">
-                                    <path d=\"M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z\"></path>
-                                    </svg><font style=\"vertical-align: center;\"><font style=\"vertical-align: center;\">
-                                    
-                                    </font></font></button> </td>";
+                                    echo "<td><button id=\"btnG\" type=\"button\" class=\"btn btn-primary\" onclick=\"verlistaf('".odbc_result($result,14)."');\">
+                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-card-list\" viewBox=\"0 0 16 16\">
+  <path d=\"M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z\"/>
+  <path d=\"M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0\"/>
+</svg><font style=\"vertical-align: center;\"><font style=\"vertical-align: center;\">
+                                    </font></font></button>  </td>";
                                     echo "</tr>";
                                 } 
                             ?>
@@ -359,3 +364,6 @@ if (!$cid){
 </body>
 
 </html>
+<?php
+odbc_close($cid);
+?>

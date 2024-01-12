@@ -5,5 +5,5 @@ unset($_SESSION['apellidos']);
 unset($_SESSION['nombre']);
 unset($_SESSION['idD']);    
 session_destroy();
-header("Location:index.html");
+header("Location:index.php");
 ?>
