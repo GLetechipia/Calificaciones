@@ -80,7 +80,7 @@ if (!$cid){
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Acciones
+                 <?php echo "Periodo ".$_SESSION['periodo']." - ".$_SESSION['ayo']; ?>
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -218,7 +218,7 @@ if (!$cid){
                                 
                                 $consulta="SELECT DISTINCT Materias.Materia, Materias.Sem, Carreras.CveDGIT, Materias.CveMat, Carreras.Abrev, Planes.ClaveDGIT, Grupos.YrP, Grupos.Per, Grupos.IdD, Grupos.IdC, Grupos.IdR, Grupos.IdM, Grupos.G, Grupos.sFKey
                                 FROM Carreras INNER JOIN (Planes INNER JOIN (Materias INNER JOIN (Docentes INNER JOIN Grupos ON Docentes.IdMast=Grupos.IdMast) ON (Materias.IdD=Grupos.IdD) AND (Materias.IdC=Grupos.IdC) AND (Materias.IdR=Grupos.IdR) AND (Materias.IdM=Grupos.IdM)) ON (Planes.IdD=Materias.IdD) AND (Planes.IdC=Materias.IdC) AND (Planes.IdR=Materias.IdR)) ON (Carreras.IdD=Grupos.IdD) AND (Carreras.IdC=Grupos.IdC) AND (Carreras.IdD=Planes.IdD) AND (Carreras.IdC=Planes.IdC)
-                                WHERE (((Grupos.YrP)=2022) AND ((Grupos.Per)=1) AND ((Grupos.IdMast)= ".$_SESSION['IdMast']."))
+                                WHERE (((Grupos.YrP)=".$_SESSION['ayo'].") AND ((Grupos.Per)=".$_SESSION['periodo'].") AND ((Grupos.IdMast)= ".$_SESSION['IdMast']."))
                                 ORDER BY Grupos.YrP, Grupos.Per;";
                                 //".$_SESSION['IdMast']." concatenacion para hacer dinamicas las busquedas de materias
 

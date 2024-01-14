@@ -13,15 +13,17 @@ $clave="";
 //$AYIO=substr($_POST['ayoperiodo'],2);
 
 $cid=odbc_connect($dsn, $usuario, $clave);
-
 if (!$cid){
 	exit("<strong>A ocurrido un error tratando de conectarse con el origen de datos.</strong>");
 }	
 // consulta SQL a nuestra tabla "alumnos,materias,grupos,listas" que se encuentra en la base de datos.
-
+/***
 $sql="SELECT Materias.Materia, Materias.CveMat, Carreras.Abrev, Planes.ClaveDGIT, Grupos.YrP, Grupos.Per
-FROM Carreras INNER JOIN (Planes INNER JOIN (Materias INNER JOIN (Docentes INNER JOIN Grupos ON Docentes.IdMast=Grupos.IdMast) ON (Materias.IdD=Grupos.IdD) AND (Materias.IdC=Grupos.IdC) AND (Materias.IdR=Grupos.IdR) AND (Materias.IdM=Grupos.IdM)) ON (Planes.IdD=Materias.IdD) AND (Planes.IdC=Materias.IdC) AND (Planes.IdR=Materias.IdR)) ON (Carreras.IdD=Grupos.IdD) AND (Carreras.IdC=Grupos.IdC) AND (Carreras.IdD=Planes.IdD) AND (Carreras.IdC=Planes.IdC)
-WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
+FROM Carreras INNER JOIN (Planes INNER JOIN (Materias INNER JOIN (Docentes INNER JOIN Grupos ON Docentes.IdMast=Grupos.IdMast) 
+ON (Materias.IdD=Grupos.IdD) AND (Materias.IdC=Grupos.IdC) AND (Materias.IdR=Grupos.IdR) AND (Materias.IdM=Grupos.IdM)) ON 
+(Planes.IdD=Materias.IdD) AND (Planes.IdC=Materias.IdC) AND (Planes.IdR=Materias.IdR)) ON (Carreras.IdD=Grupos.IdD) AND 
+(Carreras.IdC=Grupos.IdC) AND (Carreras.IdD=Planes.IdD) AND (Carreras.IdC=Planes.IdC)
+WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -80,7 +82,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Periodo 2/2023
+                 <?php echo "Periodo ".$_SESSION['periodo']." - ".$_SESSION['ayo']; ?>
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -97,89 +99,9 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
                     </div>
                 </div>
             </li>
-
             <!-- Nav Item - Utilities Collapse Menu -->
-
-            <!-- aqui inicia
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
-        fin -->
-
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <!--inicia 
-
-            <div class="sidebar-heading">
-                Addons
-            </div>
-        fin -->
-
-            <!-- Nav Item - Pages Collapse Menu -->s
-            <!--inicia     
-            <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
-                    aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item active" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li>
-        fin -->
-
+            <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Charts -->
-            <!--inicia   
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <i class="fas fa-fw fa-exclamation-triangle"></i>
-                    <span>Charts</span></a>
-            </li>
-        fin -->
-
-            <!-- Nav Item - Tables -->
-            <!--inicia   
-            <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
-        fin -->
-
-            <!-- Divider -->
-            <!--inicia      
-            <hr class="sidebar-divider d-none d-md-block">
-       fin -->
-
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -202,20 +124,13 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search 
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
+                            <p>Aqui deberia de ir el periodo</p>
                         </div>
                     </form>
-                        -->
+                        
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -352,7 +267,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;"
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; 2024</span>
+                        <span>Copyright &copy; Tecnm Campus Loreto</span>
                     </div>
                 </div>
             </footer>

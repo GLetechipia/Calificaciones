@@ -1,53 +1,42 @@
 <?php
 session_start();
-//acceso a el sistema de calificaciones
-$dsn = "sicenetxx"; //debe ser de sistema no de usuario
-$usuario = "administrador";
-$clave="";
 
-$cid=odbc_connect($dsn, $usuario, $clave);
-
-function num_row_counter($resultado){
-   $items = 0;
-while ($row = odbc_fetch_array($resultado))
-   {
-       $items++;                          
-   } 
-  //odbc_free_result($resultado);
+function num_row_counter($resultado)
+{
+    $items = 0;
+    while ($row = odbc_fetch_array($resultado))
+        $items++;
     return $items;
 }
 
-if(isset($_POST["Usuario"],$_POST["Contrasena"],$_POST["loginacces"])){
-    $consulta="select IdMast, ape, nom, idD from docentes where Login='".addslashes($_POST["Usuario"])."' and CveSice='".addslashes($_POST["Contrasena"])."';";
-    echo $consulta;
-    $result = odbc_exec($cid, $consulta) or die(header("Location:index.php"));
-     if (num_row_counter($result) > 0){
-         odbc_fetch_row($result);
-         $_SESSION['IdMast'] = odbc_result($result,1);
-         $_SESSION['apellidos']=odbc_result($result,2);
-         $_SESSION['nombre'] = odbc_result($result,3);
-         $_SESSION['idD'] = odbc_result($result,4);
-     
-        echo $_SESSION['apellidos'];
-        echo " ";
-        echo $_SESSION['nombre'];
-        
-        
-        odbc_free_result($result); 
-        odbc_close($cid);
-        header("Location:menu.php");
-     }
-     else{
-        odbc_free_result($result);  
-        odbc_close($cid);
-        header("Location:index.php");
-    }
-         
-    }
-else{
-    odbc_free_result($result);  
-    odbc_close($cid);
-    header("Location:index.php");
-}
+if (isset($_POST["Usuario"], $_POST["Contrasena"])) {
+    $ini = parse_ini_file('config.ini');
+    $dsn = $ini['odbc'];
+    $usuario = $ini['username'];
+    $clave = $ini['password'];
+    $cid = odbc_connect($dsn, $usuario, $clave);
 
+    $consulta = "select IdMast, ape, nom, idD from docentes where Login='" . addslashes($_POST["Usuario"]) . "' and CveSice='" . addslashes($_POST["Contrasena"]) . "';";
+    $result = odbc_exec($cid, $consulta);
+
+    if (num_row_counter($result) > 0) {
+        odbc_fetch_row($result);
+        $_SESSION['IdMast'] = odbc_result($result, 1);
+        $_SESSION['apellidos'] = odbc_result($result, 2);
+        $_SESSION['nombre'] = odbc_result($result, 3);
+        $_SESSION['idD'] = odbc_result($result, 4);
+        $_SESSION['periodo'] = $ini['periodo'];
+        $_SESSION['ayo'] = $ini['ayo'];
+
+        odbc_free_result($result);
+        odbc_close($cid);
+        echo 'success';
+    } else {
+        odbc_free_result($result);
+        odbc_close($cid);
+        echo 'Usuario o contraseña incorrectos. Inténtelo nuevamente.';
+    }
+} else {
+    echo 'Error: Datos de acceso no proporcionados.';
+}
 ?>
