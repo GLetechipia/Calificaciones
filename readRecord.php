@@ -4,13 +4,13 @@ function conectarse(){
 	$username = "root";
 	$password = "tooR";
 	$dbname = "sicenetv2";
-	$cid = new mysqli($servername, $username, $password, $dbname);
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	
 	if ($conn->connect_error) {
     	die("Connection failed: ".$conn->connect_error);
 	} 
-	return $cid;
+	return $conn;
 }
-
 	// Design initial table header 
 	$data = '<table class="table table-bordered table-striped">
 						<tr>
@@ -25,6 +25,7 @@ function conectarse(){
 	if (!$result = mysqli_query($con, $query)) {
         exit(mysqli_error($con));
     }
+	
 
     // if query results contains rows then featch those rows 
     if(mysqli_num_rows($result) > 0)
@@ -33,7 +34,7 @@ function conectarse(){
     	while($row = mysqli_fetch_assoc($result))
     	{
     		$data .= '<tr>
-				<td>'.$number.['idRubro']'</td>
+				<td>'.$number.['idRubro'].'</td>
 				<td>'.$row['NumTema'].'</td>
 				<td>'.$row['NunCont'].'</td>
 				<td>'.$row['calificacion'].'</td>

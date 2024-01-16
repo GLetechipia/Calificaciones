@@ -38,6 +38,20 @@ function verlistaf(sfkeyy) {
     });
 }
 
+function verlista(sFKey) {
+  $.ajax({
+    type: "POST",
+    url: "obtener_calificaciones.php", // Asegúrate de que la ruta del archivo sea correcta
+    data: { sFKey: sFKey },
+    success: function (data) {
+      $("#destino").html(data);
+    },
+    error: function () {
+      alert("Error al cargar la información.");
+    },
+  });
+}
+
 $(document).ready(function () {
   var i = 1;
   $("#add").click(function () {
