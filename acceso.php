@@ -39,4 +39,3 @@ if (isset($_POST["Usuario"], $_POST["Contrasena"])) {
 } else {
     echo 'Error: Datos de acceso no proporcionados.';
 }
-?>
