@@ -1,26 +1,16 @@
 <?php
 session_start();
 //para la base de datos
-$dsn = "sicenetxx"; //debe ser de sistema no de usuario
-$usuario = "administrador";
-$clave="";
-
-
-$cid=odbc_connect($dsn, $usuario, $clave);
+require_once('conect.odbc.php'); //crea la conexión para la base de datos
+    
 $sfkey = $_POST["sfkey"];
 echo $sfkey;
-if (!$cid){
-	exit("<strong>Ya ocurrido un error tratando de conectarse con el origen de datos.</strong>");
-    
-}
 
 ?>
 
 <div class="row">
     <div class="col-xl-12 col-sm-6">
         <!------->
-        <!--------------------------------------------------------------------------------------->
-        <!--------------------------------------------------------------------------------------->
         <!--------------------------------------------------------------------------------------->
         <!-- Content Section -->
         <!-- crud jquery-->

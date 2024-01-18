@@ -1,29 +1,8 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['IdMast'])) header("Location:index.php");
+if (!isset($_SESSION['IdMast'])) header("Location:index.php");
 
-//para la base de datos
-$dsn = "sicenetxx"; //debe ser de sistema no de usuario
-$usuario = "administrador";
-$clave="";
-//$IDMAST=$_SESSION['idMast'];
-
-//$PERIODO=substr($_POST['ayoperiodo'],0,1);
-//$AYIO=substr($_POST['ayoperiodo'],2);
-
-$cid=odbc_connect($dsn, $usuario, $clave);
-if (!$cid){
-	exit("<strong>A ocurrido un error tratando de conectarse con el origen de datos.</strong>");
-}	
-// consulta SQL a nuestra tabla "alumnos,materias,grupos,listas" que se encuentra en la base de datos.
-/***
-$sql="SELECT Materias.Materia, Materias.CveMat, Carreras.Abrev, Planes.ClaveDGIT, Grupos.YrP, Grupos.Per
-FROM Carreras INNER JOIN (Planes INNER JOIN (Materias INNER JOIN (Docentes INNER JOIN Grupos ON Docentes.IdMast=Grupos.IdMast) 
-ON (Materias.IdD=Grupos.IdD) AND (Materias.IdC=Grupos.IdC) AND (Materias.IdR=Grupos.IdR) AND (Materias.IdM=Grupos.IdM)) ON 
-(Planes.IdD=Materias.IdD) AND (Planes.IdC=Materias.IdC) AND (Planes.IdR=Materias.IdR)) ON (Carreras.IdD=Grupos.IdD) AND 
-(Carreras.IdC=Grupos.IdC) AND (Carreras.IdD=Planes.IdD) AND (Carreras.IdC=Planes.IdC)
-WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -69,20 +48,14 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard 
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-            -->
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                 <?php echo "Periodo ".$_SESSION['periodo']." - ".$_SESSION['ayo']; ?>
+                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; ?>
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -99,9 +72,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
                     </div>
                 </div>
             </li>
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <!-- Nav Item - Pages Collapse Menu -->
-            <!-- Nav Item - Charts -->
+
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -127,10 +98,10 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <p>Aqui deberia de ir el periodo</p>
+                            <p><?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; ?></p>
                         </div>
                     </form>
-                        
+
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -153,62 +124,8 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
                                 </form>
                             </div>
                         </li>
-
-                        <!-- Nav Item - Alerts ---------------------------------------------------------------------
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts ----------------------------------------------------------------
-                                <span class="badge badge-danger badge-counter">3+</span>
-                            </a>
-                            <!-- Dropdown - Alerts ******************************************************************************
-
-
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-                            ------------------------------>
                         <!-- Nav Item - Messages -->
-                        
+
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -221,21 +138,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <!---<a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400">
 
-                                    </i>
-
-                                    Perfil
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Configuraci&oacute;n
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Actividades Log
-                                </a> --->
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -255,8 +158,6 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
                     <!-- Page Heading -->
                     <h1 class="h3 mb-4 text-gray-800">Bienvenid@</h1>
 
-                    
-   
                 </div>
                 <!-- /.container-fluid -->
 
@@ -267,7 +168,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Tecnm Campus Loreto</span>
+                        <span>&copy; TecNM Campus Loreto - Letechipía 2024 &reg;</span>
                     </div>
                 </div>
             </footer>
@@ -294,7 +195,7 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Seleccionaste "Logout", estas segur@ de terminar la sesión.</div>
+                <div class="modal-body">Seleccionaste "Salir", estas segur@ de terminar la sesión.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="cerrar.php">Logout</a>
@@ -314,7 +215,5 @@ WHERE (((Grupos.IdMast)=[iMast])) ORDER BY Grupos.YrP, Grupos.Per;" */
     <script src="js/sb-admin-2.min.js"></script>
 
 </body>
+
 </html>
-<?php
-odbc_close($cid);
-?>

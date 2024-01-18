@@ -10,11 +10,7 @@ function num_row_counter($resultado)
 }
 
 if (isset($_POST["Usuario"], $_POST["Contrasena"])) {
-    $ini = parse_ini_file('config.ini');
-    $dsn = $ini['odbc'];
-    $usuario = $ini['username'];
-    $clave = $ini['password'];
-    $cid = odbc_connect($dsn, $usuario, $clave);
+    require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
     $consulta = "select IdMast, ape, nom, idD from docentes where Login='" . addslashes($_POST["Usuario"]) . "' and CveSice='" . addslashes($_POST["Contrasena"]) . "';";
     $result = odbc_exec($cid, $consulta);

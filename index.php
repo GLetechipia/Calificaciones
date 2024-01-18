@@ -90,29 +90,36 @@ if (isset($_GET['error']) && $_GET['error'] == 1) {
         }
 
         .error-modal-content {
-            background-color: #fefefe;
+            background-color: #ff4545;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
+            width: 300px;
             text-align: center;
+            color: #f5f5f5;
+            
         }
     </style>
 </head>
 <body class="text-center">
-<form class="form-signin" method="post" action="acceso.php" id="loginForm">
+<form class="form-signin" method="post" id="loginForm">
     <img class="mb-4" src="img/LogoTecLoretoV2_4.svg" alt="" width="150" height="150">
     <h1 class="h3 mb-3 font-weight-normal">Por favor escriba</h1>
 
     <label for="Usuario" class="sr-only">Usuario</label>
-    <input type="text" name="Usuario" id="Usuario" class="form-control" placeholder="Usuario" required autofocus maxlength="20">
+    <input type="text" name="Usuario" id="Usuario" class="form-control" placeholder="Usuario" required autofocus maxlength="30">
 
     <label for="Contrasena" class="sr-only">Contraseña</label>
-    <input type="password" name="Contrasena" id="Contrasena" class="form-control" placeholder="Contraseña" required maxlength="20">
+    <input type="password" name="Contrasena" id="Contrasena" class="form-control" placeholder="Contraseña" required maxlength="30">
 
     <button class="btn btn-lg btn-primary btn-block" type="button" onclick="submitForm()">Entrar</button>
+    <br>
+    <span> &copy; TecNM Campus Loreto - Letechipía 2024 &reg;</span>
 </form>
+<!-- Footer -->
 
+               
+            <!-- End of Footer -->
 <div id="errorModal" class="error-modal">
     <div class="error-modal-content">
         <p id="errorMessage"></p>
