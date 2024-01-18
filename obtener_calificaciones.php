@@ -1,43 +1,83 @@
 <?php
-session_start();
+// obtener_lista_alumnos.php
+var_dump($_POST);
 
-require_once('conect.odbc.php'); //crea la conexión para la base de datos
+if (isset($_POST['sFKey'])) {
+    // Conexión a la base de datos (debes incluir aquí tus credenciales y lógica de conexión)
+    $dsn = "sicenetxx";
+    $usuario = "administrador";
+    $clave = "";
+    $cid = odbc_connect($dsn, $usuario, $clave);
 
+    // Obtener la clave del grupo
+    $sfkey = $_POST['sFKey'];
 
-$sFKey = $_POST['sFKey'];
+    // Consulta PIVOT para obtener la lista de alumnos y calificaciones por temas
+    $consulta = "TRANSFORM Sum(CalificacionTema.calificacion) AS calificacion
+                 SELECT alumnos.numcont, alumnos.nom, alumnos.ape
+                 FROM ((alumnos 
+                        INNER JOIN Listas ON alumnos.NumCont = Listas.NumCont) 
+                        INNER JOIN TemasPorCalificar ON Listas.sFKey = TemasPorCalificar.sFKey) 
+                        INNER JOIN CalificacionTema ON (alumnos.NumCont = CalificacionTema.NumCont) 
+                        AND (TemasPorCalificar.idTemaCalificar = CalificacionTema.idTemaCalificar) 
+                 WHERE Listas.sFKey='$sfkey'
+                 GROUP BY alumnos.numcont, alumnos.nom, alumnos.ape
+                 PIVOT temasporcalificar.nombretema";
 
-$consulta = "SELECT CalificacionRubros.IdRubro, CalificacionRubros.NumTema, CalificacionRubros.Cal, RubrosPorTemas.NomRubro
-FROM CalificacionRubros
-INNER JOIN RubrosPorTemas ON CalificacionRubros.IdRubro = RubrosPorTemas.IdRubro
-WHERE CalificacionRubros.sFKey = '$sFKey';";
+    $result = odbc_exec($cid, $consulta);
 
-$result = odbc_exec($cid, $consulta);
+    // Obtener el número de campos y los nombres de los campos
+    $numFields = odbc_num_fields($result);
+    $fieldNames = array();
+    for ($i = 1; $i <= $numFields; $i++) {
+        $fieldNames[] = odbc_field_name($result, $i);
+    }
 
-$html = '<table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Rubro</th>
-                    <th>Tema</th>
-                    <th>Calificación</th>
-                </tr>
-            </thead>
-            <tbody>';
+    // Construir la tabla HTML con la lista de alumnos y calificaciones
+    $tabla_html = '<table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Número de Control</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>';
 
-while (odbc_fetch_row($result)) {
-    $idRubro = odbc_result($result, 1);
-    $numTema = odbc_result($result, 2);
-    $calificacion = odbc_result($result, 3);
-    $nomRubro = odbc_result($result, 4);
+    // Agregar los nombres de los campos en la cabecera
+    foreach ($fieldNames as $fieldName) {
+        $tabla_html .= '<th>' . $fieldName . '</th>';
+    }
 
-    $html .= "<tr>
-                <td>$nomRubro</td>
-                <td>Tema $numTema</td>
-                <td>$calificacion</td>
-            </tr>";
+    $tabla_html .= '</tr>
+                    </thead>
+                    <tbody>';
+
+    while (odbc_fetch_row($result)) {
+        $numcont = odbc_result($result, 1);
+        $nom = odbc_result($result, 2);
+        $ape = odbc_result($result, 3);
+
+        $tabla_html .= '<tr>
+                            <td>' . $numcont . '</td>
+                            <td>' . $nom . '</td>
+                            <td>' . $ape . '</td>';
+
+        // Agregar las calificaciones por tema a la fila
+        for ($i = 4; $i <= $numFields; $i++) {
+            $calificacion = odbc_result($result, $i);
+            $tabla_html .= '<td>' . $calificacion . '</td>';
+        }
+
+        $tabla_html .= '</tr>';
+    }
+
+    $tabla_html .= '</tbody></table>';
+
+    // Cerrar la conexión a la base de datos
+    odbc_close($cid);
+
+    // Devolver la tabla HTML como respuesta al cliente
+    echo $tabla_html;
+} else {
+    // Si no se proporciona la clave del grupo, devolver un mensaje de error
+    echo 'Error: Clave de grupo no proporcionada.';
 }
-
-$html .= '</tbody></table>';
-
-echo $html;
-
-odbc_close($cid);
+?>

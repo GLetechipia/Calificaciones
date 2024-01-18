@@ -39,18 +39,26 @@ function verlistaf(sfkeyy) {
 }
 
 function verlista(sFKey) {
+  // Muestra un indicador de carga mientras se espera la respuesta del servidor
+  console.log("Clave del grupo:", sFKey);
+  $("#destino").html("<p>Cargando...</p>");
+
+  // Realiza la solicitud AJAX
   $.ajax({
     type: "POST",
     url: "obtener_calificaciones.php", // Asegúrate de que la ruta del archivo sea correcta
     data: { sFKey: sFKey },
-    success: function (data) {
-      $("#destino").html(data);
-    },
-    error: function () {
-      alert("Error al cargar la información.");
-    },
+  })
+  .done(function (data) {
+    // Actualiza el contenido de #destino con la respuesta recibida
+    $("#destino").html(data);
+  })
+  .fail(function () {
+    // Muestra un mensaje de error en caso de problemas con la solicitud
+    $("#destino").html("<p>Error al cargar la información.</p>");
   });
 }
+
 
 $(document).ready(function () {
   var i = 1;
