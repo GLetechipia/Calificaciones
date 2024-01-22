@@ -50,7 +50,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; 
+                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo'];
                 //echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
                 ?>
 
@@ -73,7 +73,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                         <a class="collapse-item" href="asesorias.php">Asesorías</a>
                     </div>
                 </div>
-                
+
             </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -178,13 +178,17 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                                             echo "<td>" . utf8_encode(odbc_result($result, 1)) . "</td>";
                                             echo "<td>" . odbc_result($result, 2) . "</td>";
                                             echo "<td>" . odbc_result($result, 13) . "</td>";
-                                            //echo "<td>".odbc_result($result,4)."</td>";
-                                            echo "<td><button id=\"btnG\" type=\"button\" class=\"btn btn-primary\" onclick=\"verlistaf('" . odbc_result($result, 14) . "');\">
-                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-card-list\" viewBox=\"0 0 16 16\">
-  <path d=\"M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z\"/>
-  <path d=\"M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0\"/>
-</svg><font style=\"vertical-align: center;\"><font style=\"vertical-align: center;\">
-                                    </font></font></button>  </td>";
+                                            echo "<td>
+                <button type='button' class='btn btn-success' onclick='subirArchivo(\"" . odbc_result($result, 14) . "\")'>
+                    <i class='fas fa-upload'></i> 
+                </button>
+                <button type='button' class='btn btn-danger' onclick='eliminarArchivo(\"" . odbc_result($result, 14) . "\")'>
+                    <i class='fas fa-trash'></i> Eliminar
+                </button>
+                <button type='button' class='btn btn-primary' onclick='verArchivo(\"" . odbc_result($result, 14) . "\")'>
+                    <i class='fas fa-eye'></i> Ver
+                </button>
+            </td>";
                                             echo "</tr>";
                                         }
                                         ?>
@@ -286,6 +290,28 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                     </div>
                 </div>
 
+                <div class='modal fade' id='verModal' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+                    <div class='modal-dialog' role='document'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <h5 class='modal-title'>Ver Archivo</h5>
+                                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                                    <span aria-hidden='true'>&times;</span>
+                                </button>
+                            </div>
+                            <div class='modal-body' id='modalContenido'>
+                                <!-- Contenido del modal -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
                 <!-- Bootstrap core JavaScript-->
                 <script src="vendor/jquery/jquery.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -296,6 +322,87 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                 <!-- Custom scripts for all pages-->
                 <script src="js/sb-admin-2.min.js"></script>
                 <script src="scripts.js" type="text/javascript"></script>
+                <script type="text/javascript">
+                    $.ajaxSetup({
+                        cache: false
+                    });
+
+                    function verArchivo(sfkey) {
+                        // Agrega una cadena de consulta única para evitar la caché del navegador
+                        var uniqueString = new Date().getTime();
+                        // Comprobamos si el archivo existe antes de intentar cargarlo
+                        $.ajax({
+                            type: 'HEAD',
+                            url: 'uploads/' + sfkey + '.pdf?timestamp=' + uniqueString,
+                            success: function() {
+                                // El archivo existe, actualizamos dinámicamente el contenido del modal
+                                $('#modalContenido').html("<iframe src='verArchivo.php?sfkey=" + sfkey + "&timestamp=" + uniqueString + "' width='100%' height='600'></iframe>");
+                                // Mostramos el modal
+                                $('#verModal').modal('show');
+                            },
+                            error: function() {
+                                // El archivo no existe, mostramos un mensaje de error
+                                alert('El archivo no existe.');
+                            }
+                        });
+                    }
+
+
+
+                    function eliminarArchivo(sfkey) {
+                        if (confirm("¿Estás seguro de que deseas eliminar este archivo?")) {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'eliminarArchivo.php',
+                                data: {
+                                    sfkey: sfkey
+                                },
+                                success: function(response) {
+                                    console.log(response);
+                                    // Puedes hacer algo con la respuesta si es necesario
+                                    alert('Archivo eliminado correctamente');
+                                    // Aquí puedes recargar la tabla o realizar otras actualizaciones en la interfaz
+                                    location.reload(true);
+                                },
+                                error: function(error) {
+                                    console.error('Error al eliminar el archivo:', error);
+                                }
+                            });
+                        }
+                    }
+
+                    function subirArchivo(sfkey) {
+                        var inputFile = $('<input type="file" accept=".pdf">');
+                        inputFile.on('change', function() {
+                            var file = this.files[0];
+                            if (file) {
+                                var formData = new FormData();
+                                formData.append('sfkey', sfkey);
+                                formData.append('archivo', file);
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'subirArchivo.php',
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function(response) {
+                                        console.log(response);
+                                        // Puedes hacer algo con la respuesta si es necesario
+                                        alert('Archivo subido correctamente');
+                                        // Aquí puedes recargar la tabla o realizar otras actualizaciones en la interfaz
+                                        location.reload(true);
+                                    },
+                                    error: function(error) {
+                                        console.error('Error al subir el archivo:', error);
+                                    }
+                                });
+                            }
+                        });
+
+                        inputFile.click(); // Simula el clic en el botón de carga de archivo
+                    }
+                </script>
 </body>
 
 </html>
