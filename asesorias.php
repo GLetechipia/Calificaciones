@@ -56,7 +56,7 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
             <!-- Heading -->
             <div class="sidebar-heading">
                 <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; 
-                echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+                //echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
                 ?>
 
             </div>
@@ -67,7 +67,7 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Gestiones</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Calificaciones</h6>
                         <a class="collapse-item" href="parciales.php">Parciales</a>
@@ -75,11 +75,12 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
                         <h6 class="collapse-header">Académica</h6>
                         <a class="collapse-item" href="instrumentaciones.php">Instrumentaciones</a>
                         <a class="collapse-item" href="tutorias.php">Tutorías</a>
-                        <a class="collapse-item" href="asesorias.php">Asesorías</a>
+                        <a class="collapse-item active" href="asesorias.php">Asesorías</a>
                     </div>
                 </div>
                 
             </li>
+            <hr class="sidebar-divider">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

@@ -3,12 +3,8 @@
 //var_dump($_POST);
 echo "Lista de Alumnos ";
 if (isset($_POST['sFKey'])) {
-    // Conexión a la base de datos (debes incluir aquí tus credenciales y lógica de conexión)
-    $dsn = "sicenetxx";
-    $usuario = "administrador";
-    $clave = "";
-    $cid = odbc_connect($dsn, $usuario, $clave);
-
+    
+    require_once('conect.odbc.php'); //crea la conexión para la base de datos
     // Obtener la clave del grupo
     $sfkey = $_POST['sFKey'];
 

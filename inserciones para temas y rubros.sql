@@ -1,7 +1,7 @@
-para poder insertar un nuevo tema.
+/*para poder insertar un nuevo tema en una materia especifica, periodo y año especifico, dado por sfkey.*/
 insert into temasporcalificar (sfkey,nombretema) values('03010328232A','Tema1');
 
-para seleccionar la lista de alumnos del maximo tema del grupo especifico esto servira para la insercion en calificacionportemas
+/*para seleccionar la lista de alumnos del maximo tema del grupo especifico esto servira para la insercion en calificacionportemas*/
 
 SELECT TemasPorCalificar.idTemaCalificar, Listas.NumCont
 FROM Listas, TemasPorCalificar 
@@ -9,8 +9,8 @@ where listas.sfkey=temasporcalificar.sfkey and
 listas.sfkey='03010328232A' and 
 TemasPorCalificar.idtemacalificar in(select max(idtemacalificar) from temasporcalificar where sfkey='03010328232A')
 
-insertamos las calificaciones de los temas cuando se crea un nuevo tema para el grupo tomando en cuenta la consulta anterior 
-se debe hacer solo cuando se inserta un nuevo tema
+/*insertamos las calificaciones de los temas cuando se crea un nuevo tema para el grupo tomando en cuenta la consulta anterior 
+se debe hacer solo cuando se inserta un nuevo tema*/
 
 insert into calificaciontema(idtemacalificar,numcont)
 SELECT TemasPorCalificar.idTemaCalificar, Listas.NumCont
@@ -19,7 +19,7 @@ where listas.sfkey=temasporcalificar.sfkey and
 listas.sfkey='03010328232A' and 
 TemasPorCalificar.idtemacalificar in(select max(idtemacalificar) from temasporcalificar where sfkey='03010328232A')
 
-muestra numero de control, apellidos y nombre, junto con las calificaciones de los temas existentes de un sfkey
+/*muestra numero de control, apellidos y nombre, junto con las calificaciones de los temas existentes de un sfkey*/
 
 TRANSFORM Sum(calificaciontema.calificacion) AS calificacion
 SELECT alumnos.numcont, alumnos.nom, alumnos.ape

@@ -50,25 +50,31 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; ?>
+                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; 
+                //echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+                ?>
+
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-
-                    <span>Calificaciones</span>
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Gestiones</span>
                 </a>
                 <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <!--CREAR PAGINA PARA LA CAPTURA DE CALIFICACIONES--->
                         <h6 class="collapse-header">Calificaciones</h6>
-                        <a class="collapse-item " href="parciales.php">Parciales</a>
+                        <a class="collapse-item" href="parciales.php">Parciales</a>
                         <a class="collapse-item active" href="finales.php">Finales</a>
+                        <h6 class="collapse-header">Académica</h6>
+                        <a class="collapse-item " href="instrumentaciones.php">Instrumentaciones</a>
+                        <a class="collapse-item" href="tutorias.php">Tutorías</a>
+                        <a class="collapse-item" href="asesorias.php">Asesorías</a>
                     </div>
                 </div>
+                
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -139,10 +145,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                     </h1>
 
                     <?php
-                    $dsn = "sicenetxx"; //debe ser de sistema no de usuario
-                    $usuario = "administrador";
-                    $clave = "";
-                    $cid = odbc_connect($dsn, $usuario, $clave,);
+                    require_once('conect.odbc.php'); //crea la conexión para la base de datos
                     ?>
                     <!-- Page Heading -->
 
