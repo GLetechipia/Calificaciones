@@ -160,7 +160,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                                         <th>Materias</th>
                                         <th>Semestre</th>
                                         <th>Grupo</th>
-                                        <th>Ver</th>
+                                        <th>Instrumentaciones</th>
                                     </tr>
                                     <tr>
                                         <?php
@@ -180,7 +180,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                                             echo "<td>" . odbc_result($result, 13) . "</td>";
                                             echo "<td>
                 <button type='button' class='btn btn-success' onclick='subirArchivo(\"" . odbc_result($result, 14) . "\")'>
-                    <i class='fas fa-upload'></i> 
+                    <i class='fas fa-upload'></i> Subir
                 </button>
                 <button type='button' class='btn btn-danger' onclick='eliminarArchivo(\"" . odbc_result($result, 14) . "\")'>
                     <i class='fas fa-trash'></i> Eliminar
@@ -328,13 +328,12 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                     });
 
                     function verArchivo(sfkey) {
-                        // Agrega una cadena de consulta única para evitar la caché del navegador
-                        var uniqueString = new Date().getTime();
                         // Comprobamos si el archivo existe antes de intentar cargarlo
                         $.ajax({
                             type: 'HEAD',
-                            url: 'uploads/' + sfkey + '.pdf?timestamp=' + uniqueString,
+                            url: 'uploads/' + <?php echo $_SESSION['ayo'] ?> + '/' + <?php echo $_SESSION['periodo'] ?> + '/' + sfkey + '.pdf',
                             success: function() {
+                                var uniqueString = new Date().getTime();
                                 // El archivo existe, actualizamos dinámicamente el contenido del modal
                                 $('#modalContenido').html("<iframe src='verArchivo.php?sfkey=" + sfkey + "&timestamp=" + uniqueString + "' width='100%' height='600'></iframe>");
                                 // Mostramos el modal
@@ -349,13 +348,16 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
 
 
+
                     function eliminarArchivo(sfkey) {
                         if (confirm("¿Estás seguro de que deseas eliminar este archivo?")) {
                             $.ajax({
                                 type: 'POST',
                                 url: 'eliminarArchivo.php',
                                 data: {
-                                    sfkey: sfkey
+                                    sfkey: sfkey,
+                                    ayo: <?php echo $_SESSION['ayo'] ?>,
+                                    periodo: <?php echo $_SESSION['periodo'] ?>
                                 },
                                 success: function(response) {
                                     console.log(response);
@@ -371,11 +373,30 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                         }
                     }
 
+
                     function subirArchivo(sfkey) {
                         var inputFile = $('<input type="file" accept=".pdf">');
                         inputFile.on('change', function() {
                             var file = this.files[0];
+
+                            // Verificar que se haya seleccionado un archivo
                             if (file) {
+                                // Verificar la extensión del archivo
+                                var fileName = file.name;
+                                var fileExtension = fileName.split('.').pop().toLowerCase();
+                                if (fileExtension !== 'pdf') {
+                                    alert('Por favor, selecciona un archivo PDF.');
+                                    return;
+                                }
+
+                                // Verificar el tamaño del archivo
+                                var fileSize = file.size; // en bytes
+                                var maxSize = 5 * 1024 * 1024; // 10 MB en bytes
+                                if (fileSize > maxSize) {
+                                    alert('El tamaño del archivo no debe superar los 5 MB.');
+                                    return;
+                                }
+
                                 var formData = new FormData();
                                 formData.append('sfkey', sfkey);
                                 formData.append('archivo', file);
@@ -390,8 +411,9 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                                         console.log(response);
                                         // Puedes hacer algo con la respuesta si es necesario
                                         alert('Archivo subido correctamente');
-                                        // Aquí puedes recargar la tabla o realizar otras actualizaciones en la interfaz
-                                        location.reload(true);
+                                        // Actualiza solo la parte necesaria de la interfaz sin recargar la página
+                                        // (opcional dependiendo de tus necesidades)
+                                        // location.reload(true);
                                     },
                                     error: function(error) {
                                         console.error('Error al subir el archivo:', error);

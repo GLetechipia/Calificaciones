@@ -1,20 +1,33 @@
 <?php
 session_start();
 
-// Agrega la lógica para validar sesiones, como lo hiciste al inicio de tu script
+if (!isset($_SESSION['IdMast'])) {
+    header("Location: index.php");
+    exit();
+}
 
-if (isset($_POST['sfkey'])) {
-    $sfkey = $_POST['sfkey'];
-    $rutaArchivo = 'uploads/' . $sfkey . '.pdf';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['sfkey'])) {
+        $sfkey = $_POST['sfkey'];
+        
+        // Obtener ayo y periodo desde las variables de sesión
+        $ayo = $_SESSION['ayo'];
+        $periodo = $_SESSION['periodo'];
 
-    if (file_exists($rutaArchivo)) {
-        unlink($rutaArchivo);
-        // Puedes realizar operaciones adicionales aquí, como eliminar información en la base de datos
-        echo 'Archivo eliminado correctamente.';
+        // Verificar que el archivo exista antes de intentar eliminarlo
+        $archivo = 'uploads/' . $ayo . '/' . $periodo . '/' . $sfkey . '.pdf';
+
+        if (file_exists($archivo)) {
+            // Eliminar el archivo
+            unlink($archivo);
+            echo 'Archivo eliminado correctamente.';
+        } else {
+            echo 'El archivo no existe.';
+        }
     } else {
-        echo 'El archivo no existe.';
+        echo 'Parámetros incompletos.';
     }
 } else {
-    echo 'Error: No se proporcionó el identificador del archivo.';
+    echo 'Acceso no permitido.';
 }
 ?>
