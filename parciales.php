@@ -1,4 +1,5 @@
 <?php
+/****parciales.php */
 session_start();
 if (!isset($_SESSION['IdMast'])) header("Location:index.php");
 
@@ -59,7 +60,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; 
+                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo'];
                 //echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
                 ?>
 
@@ -82,7 +83,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                         <a class="collapse-item" href="asesorias.php">Asesorías</a>
                     </div>
                 </div>
-                
+
             </li>
 
 
@@ -192,7 +193,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                                 FROM Carreras INNER JOIN (Planes INNER JOIN (Materias INNER JOIN (Docentes INNER JOIN Grupos ON Docentes.IdMast=Grupos.IdMast) ON (Materias.IdD=Grupos.IdD) AND (Materias.IdC=Grupos.IdC) AND (Materias.IdR=Grupos.IdR) AND (Materias.IdM=Grupos.IdM)) ON (Planes.IdD=Materias.IdD) AND (Planes.IdC=Materias.IdC) AND (Planes.IdR=Materias.IdR)) ON (Carreras.IdD=Grupos.IdD) AND (Carreras.IdC=Grupos.IdC) AND (Carreras.IdD=Planes.IdD) AND (Carreras.IdC=Planes.IdC)
                                 WHERE (((Grupos.YrP)=" . $_SESSION['ayo'] . ") AND ((Grupos.Per)=" . $_SESSION['periodo'] . ") AND ((Grupos.IdMast)= " . $_SESSION['IdMast'] . "))
                                 ORDER BY Grupos.YrP, Grupos.Per;";
-                                       
+
 
                                         $result = odbc_exec($cid, $consulta,);
 
@@ -262,7 +263,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Bootstrap core JavaScript-->
                 <script src="vendor/jquery/jquery.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

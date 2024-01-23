@@ -180,13 +180,13 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                                             echo "<td>" . odbc_result($result, 13) . "</td>";
                                             echo "<td>
                 <button type='button' class='btn btn-success' onclick='subirArchivo(\"" . odbc_result($result, 14) . "\")'>
-                    <i class='fas fa-upload'></i> Subir
+                    <i class='fas fa-upload'></i> 
                 </button>
                 <button type='button' class='btn btn-danger' onclick='eliminarArchivo(\"" . odbc_result($result, 14) . "\")'>
-                    <i class='fas fa-trash'></i> Eliminar
+                    <i class='fas fa-trash'></i> 
                 </button>
                 <button type='button' class='btn btn-primary' onclick='verArchivo(\"" . odbc_result($result, 14) . "\")'>
-                    <i class='fas fa-eye'></i> Ver
+                    <i class='fas fa-eye'></i> 
                 </button>
             </td>";
                                             echo "</tr>";

@@ -1,12 +1,19 @@
 <?php
-// obtener_lista_alumnos.php
+// obtener_calificaciones.php
 //var_dump($_POST);
-echo "Lista de Alumnos ";
+
 if (isset($_POST['sFKey'])) {
-    
     require_once('conect.odbc.php'); //crea la conexión para la base de datos
     // Obtener la clave del grupo
     $sfkey = $_POST['sFKey'];
+    $consulta = "SELECT Materias.Materia, Grupos.sFKey
+FROM Materias INNER JOIN Grupos ON (Materias.IdM = Grupos.IdM) AND (Materias.IdR = Grupos.IdR) AND (Materias.IdC = Grupos.IdC) AND (Materias.IdD = Grupos.IdD)
+WHERE (((Grupos.sFKey)='$sfkey'));
+";
+
+    $result = odbc_exec($cid, $consulta);
+    $row = odbc_result($result,1);
+    echo "<h1>".utf8_encode($row)."</h1>";
 
     // Consulta PIVOT para obtener la lista de alumnos y calificaciones por temas
     $consulta = "TRANSFORM Sum(CalificacionTema.calificacion) AS calificacion
@@ -30,7 +37,8 @@ if (isset($_POST['sFKey'])) {
     }
     if (count($fieldNames) > 3) {
         // Construir la tabla HTML con la lista de alumnos y calificaciones
-        $tabla_html = '<table class="table table-bordered">
+        $tabla_html = '<form id="verRubrosForm" method="post" action="ver_rubros.php">
+                        <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Número de Control</th>
@@ -38,7 +46,17 @@ if (isset($_POST['sFKey'])) {
 
         // Agregar los nombres de los campos en la cabecera
         for ($i = 3; $i < $numFields; $i++) {
-            $tabla_html .= '<th>' . utf8_encode($fieldNames[$i]) . '</th>';
+            $nombreTema = $fieldNames[$i];
+
+            // Obtener el idTemaCalificar correspondiente al nombre del tema
+            $consultaidtema = "SELECT idTemaCalificar FROM TemasPorCalificar WHERE sfkey='$sfkey' AND nombretema='$nombreTema'";
+            $resultIdTema = odbc_exec($cid, $consultaidtema);
+            $idTemaCalificar = odbc_result($resultIdTema, 1);
+
+            // Mostrar un enlace o botón en el encabezado del tema
+            $tabla_html .= '<th>';          
+            $tabla_html .= '<a href="#" id="verRubros" data-idtema="' . urlencode($idTemaCalificar) . '">' . $nombreTema . '</a>';
+            $tabla_html .= '</th>';
         }
 
         $tabla_html .= '</tr>
@@ -63,7 +81,9 @@ if (isset($_POST['sFKey'])) {
             $tabla_html .= '</tr>';
         }
 
-        $tabla_html .= '</tbody></table>';
+        $tabla_html .= '</tbody></table>
+        <input type="text" id="idTemaInput" name="idTema" value="">
+</form>';
 
         // Cerrar la conexión a la base de datos
         //odbc_close($cid);
@@ -87,6 +107,11 @@ while ($row = odbc_fetch_array($resultTemas)) {
     $temasActuales[] = $row['nombretema'];
 }
 ?>
+
+
+    <!-- Campo oculto para enviar el ID del tema -->
+    
+
 <!-- Modal para Agregar/Quitar Temas -->
 <div class="modal fade" id="agregarQuitarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -172,7 +197,7 @@ while ($row = odbc_fetch_array($resultTemas)) {
                     // Mostrar mensaje modal después de agregar el tema
                     mostrarMensaje('Tema agregado exitosamente.');
                     activarModal();
-                    setTimeout(() =>verlista('<?php echo $sfkey; ?>'),3500);
+                    setTimeout(() => verlista('<?php echo $sfkey; ?>'), 3500);
                 },
                 error: function(error) {
                     console.error(error);
@@ -205,7 +230,7 @@ while ($row = odbc_fetch_array($resultTemas)) {
                     // Mostrar mensaje modal después de quitar el tema
                     mostrarMensaje('Tema y calificaciones asociadas quitados exitosamente.');
                     activarModal();
-                    setTimeout(() =>verlista('<?php echo $sfkey; ?>'),3500);
+                    setTimeout(() => verlista('<?php echo $sfkey; ?>'), 3500);
                 },
                 error: function(error) {
                     console.error(error);
@@ -231,7 +256,7 @@ while ($row = odbc_fetch_array($resultTemas)) {
             $('#mensajeModal').modal('hide');
         }, 3000);
     }
-    
+
     // Función para activar el modal mediante el botón oculto
     function activarModal() {
         $('#btnMostrarModal').trigger('click');

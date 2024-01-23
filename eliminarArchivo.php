@@ -9,7 +9,7 @@ if (!isset($_SESSION['IdMast'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['sfkey'])) {
         $sfkey = $_POST['sfkey'];
-        
+
         // Obtener ayo y periodo desde las variables de sesión
         $ayo = $_SESSION['ayo'];
         $periodo = $_SESSION['periodo'];
@@ -30,4 +30,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo 'Acceso no permitido.';
 }
-?>

@@ -1,4 +1,6 @@
+/***script.js */
 //ver lista de alumnos de la materia en parciales
+/***
 function verlista(sfkeyy) {
   //obtenemos el sfkey
   sK = sfkeyy;
@@ -17,7 +19,7 @@ function verlista(sfkeyy) {
       );
     });
 }
-
+***/
 //ver lista de alumnos de la materia en fianles
 function verlistaf(sfkeyy) {
   //obtenemos el sfkey
@@ -49,30 +51,46 @@ function verlista(sFKey) {
     url: "obtener_calificaciones.php", // Asegúrate de que la ruta del archivo sea correcta
     data: { sFKey: sFKey },
   })
-  .done(function (data) {
-    // Actualiza el contenido de #destino con la respuesta recibida
-    $("#destino").html(data);
-  })
-  .fail(function () {
-    // Muestra un mensaje de error en caso de problemas con la solicitud
-    $("#destino").html("<p>Error al cargar la información.</p>");
-  });
+    .done(function (data) {
+      // Actualiza el contenido de #destino con la respuesta recibida
+      $("#destino").html(data);
+    })
+    .fail(function () {
+      // Muestra un mensaje de error en caso de problemas con la solicitud
+      $("#destino").html("<p>Error al cargar la información.</p>");
+    });
 }
 
 
 $(document).ready(function () {
   var i = 1;
+  /***
   $("#add").click(function () {
     i++;
     $("#dynamic_field").append(
       '<tr id="row' +
-        i +
-        '"><td><input type="text" name="rubro[]" placeholder="Descripcion" class="form-control name_list" /><input type="text" name="Porcentaje[]" placeholder="%" class="form-control name_list" /></td><td><button type="button" name="remove" id="' +
-        i +
-        '" class="btn btn-danger btn_remove">X</button></td></tr>'
+      i +
+      '"><td><input type="text" name="rubro[]" placeholder="Descripcion" class="form-control name_list" /><input type="text" name="Porcentaje[]" placeholder="%" class="form-control name_list" /></td><td><button type="button" name="remove" id="' +
+      i +
+      '" class="btn btn-danger btn_remove">X</button></td></tr>'
     );
     verlista($_SESSION["sfkeyy"]);
   });
+*///
+$(document).on("click", "#verRubros", function (e) {
+  e.preventDefault();
+
+  // Obtener el identificador único del tema
+  var idTema = $(this).data("idtema");
+
+  console.log("ID del tema:", idTema); // Verifica que se está obteniendo el ID del tema correctamente
+
+  // Asignar el valor al campo oculto
+  $("#idTemaInput").val(idTema);
+
+  // Enviar el formulario
+  $("#verRubrosForm").submit();
+});
 
   $(document).on("click", ".btn_remove", function () {
     var button_id = $(this).attr("id");
@@ -130,4 +148,6 @@ $(document).ready(function () {
       },
     });
   });
+
+  
 });

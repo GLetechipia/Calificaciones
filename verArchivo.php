@@ -13,7 +13,7 @@ $periodo = isset($_SESSION['periodo']) ? $_SESSION['periodo'] : '';
 
 // Genera la URL completa del archivo PDF incluyendo ayo y periodo
 $pdfUrl = 'uploads/' . $ayo . '/' . $periodo . '/' . $sfkey . '.pdf';
-echo $pdfUrl;
+//echo $pdfUrl;
 
 // Imprime el iframe con la URL del archivo
 echo "<iframe src='{$pdfUrl}?timestamp={$timestamp}' width='100%' height='600'></iframe>";
