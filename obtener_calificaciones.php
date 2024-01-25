@@ -27,6 +27,8 @@ WHERE (((Grupos.sFKey)='$sfkey'));
                  GROUP BY alumnos.numcont, alumnos.nom, alumnos.ape order by alumnos.ape
                  PIVOT temasporcalificar.nombretema";
 
+                 
+
     $result = odbc_exec($cid, $consulta);
 
     // Obtener el número de campos y los nombres de los campos
