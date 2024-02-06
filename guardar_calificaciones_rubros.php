@@ -14,10 +14,9 @@ foreach ($calificaciones as $numCont => $rubros) {
     foreach ($rubros as $idRubro => $calificacion) {
         // Consulta para guardar la calificación en la tabla calificacionRubro
         $consultaGuardarCalificacion = "UPDATE calificacionRubro
-                                       SET calificacion = '$calificacion'
+                                       SET calificacion = $calificacion
                                        WHERE NumCont = '$numCont'
-                                       AND idRubroTema = '$idRubro';";
-
+                                       AND idRubroTema = $idRubro;";
         odbc_exec($cid, $consultaGuardarCalificacion);
     }
 }
@@ -25,26 +24,34 @@ foreach ($calificaciones as $numCont => $rubros) {
 odbc_close($cid);
 
 
-exit();
+//exit();
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Guardando Calificaciones...</title>
     <!-- Agregar jQuery (asegúrate de que el archivo esté disponible en tu servidor) -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
+
 <body>
     <script>
+        // Obtener el ID del tema desde PHP
+        var idTema = <?php echo json_encode($idTema); ?>;
+
         // Realizar la redirección mediante AJAX
         $.ajax({
             type: 'POST',
             url: 'ver_rubros.php',
-            data: <?php echo json_encode($redirectData); ?>,
+            data: {
+                idTema: idTema
+            }, // Pasar el idTema como parámetro
             success: function(response) {
                 // Puedes manejar la respuesta si es necesario
-                console.log('Redirección exitosa:', response);
+                $('body').html(response);
+                //console.log('Redirección exitosa:', response);
             },
             error: function(error) {
                 // Puedes manejar errores si es necesario
@@ -56,4 +63,5 @@ exit();
         });
     </script>
 </body>
+
 </html>

@@ -111,12 +111,12 @@ $(document).on("click", "#verRubros", function (e) {
 
   $(document).on("submit", "#calif", function (e) {
     e.preventDefault();
-    var dataSend = $("#calif").serializeArray(); // Utiliza serialize en lugar de serializeArray
+    var dataSend = $("#calif").serializeArray(); 
     console.log("Datos del formulario", dataSend);
     $.ajax({
       type: "POST",
       url: "update.calif.php",
-      contentType: "application/x-www-form-urlencoded", // Asegúrate de que coincida con el tipo de datos que estás enviando
+      contentType: "application/x-www-form-urlencoded", 
       data: dataSend,
       success: function (response) {
         console.log(response);
@@ -132,7 +132,7 @@ $(document).on("click", "#verRubros", function (e) {
             .delay(3000)
             .fadeOut();
           mensajeTexto.text("Se han realizado los cambios exitosamente.");
-          // Puedes hacer más cosas aquí, como recargar la página o actualizar partes específicas de la interfaz de usuario.
+          
         } else {
           mensajeDiv
             .removeClass("alert-success")

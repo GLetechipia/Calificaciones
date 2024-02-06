@@ -13,6 +13,7 @@ if (!isset($_SESSION['usuario'])) {
 
 // Obtener el ID del tema desde el POST
 $idTema = $_POST['idTema'];
+$_SESSION['idTema'] = $idTema;
 
 // Consulta para obtener los datos del tema
 $consultaTema = "SELECT Materias.Materia, TemasPorCalificar.nombreTema
@@ -53,7 +54,7 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
 <html lang="es">
 
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -107,12 +108,12 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                                                FROM calificacionRubro
                                                WHERE calificacionRubro.NumCont = '{$calificacion['numcont']}' 
                                                AND calificacionRubro.idRubroTema = $idRubro;";
-
+                    
                     $resultCalificacionRubro = odbc_exec($cid, $consultaCalificacionRubro);
                     $calificacionRubro = odbc_fetch_array($resultCalificacionRubro);
 
                     // Agregar campos de entrada editables
-                    echo "<td><input class='form-control' type='text' name='calificaciones[{$calificacion['numcont']}][$idRubro]' value='{$calificacionRubro['calificacion']}'></td>";
+                    echo "<td><input class='form-control' type='text' name='calificaciones[{$calificacion['numcont']}][$idRubro]' value='{$calificacionRubro['calificacion']}' maxlength='3' style='width: 60px; text-align:right'></td>";
                 }
 
                 echo "</tr>";
@@ -143,22 +144,23 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                 </div>
                 <div class="modal-body">
                     <!-- Contenido del modal -->
-                    <form method="post" action="guardar_rubros_porcentaje.php" id="formularioRubros">
+                    <form method="post" action="guardar_rubros.php" id="formularioRubros">
                         <div id="contenedor-nombres-porcentajes">
-                            <div class="fila" id="fila-1">
-                                <label for="nombre1">Nombre 1:</label>
-                                <input type="text" id="nombre1" name="nombre1"class="form-control" required>
-                                <label for="porcentaje1">Porcentaje 1:</label>
-                                <input type="number" id="porcentaje1" name="porcentaje1" class="form-control" min="0" max="100" required>
-                                <input type="hidden" name="idRubro1" value="<?php echo uniqid(); ?>">
+                            <!-- La primera fila se mantiene, solo para clonarla después -->
+                            <div class="fila" id="fila-0">
+                                <label for="nombre0">Nombre:</label>
+                                <input type="text" class="nombre" name="nombres[]" required value="Asistencia">
+                                <label for="porcentaje0">Porcentaje :</label>
+                                <input type="number" class="porcentaje" name="porcentajes[]" min="0" max="100" required value="50" style="width: 60px; text-align:right">
+                                <input type="hidden" class="idRubro" name="idRubros[]" value="2">
                                 <button type="button" class="eliminar-fila btn btn-danger" style="display:none">Eliminar</button>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <button type="button" id="agregar-fila" class="btn btn-success mr-2" title="Agrega un nuevo rubro al tema actual">
-                                <i class="bi bi-plus"></i> Rubro
+                            <button type="button" id="agregar-fila" class="btn btn-success mr-2">
+                                <i class="bi bi-plus"></i> Agregar Nombre y Porcentaje
                             </button>
-                            <input type="submit" value="Guardar" class="btn btn-success" title="Guarda los rubros del presente tema">
+                            <input type="submit" value="Guardar Rubros" class="btn btn-success">
                         </div>
                     </form>
                 </div>
@@ -166,7 +168,7 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                     <p class="mensaje-eliminar-rubro text-danger">
                         Recuerde que si elimina un rubro, las calificaciones relacionadas a este se eliminarán.
                     </p>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -176,41 +178,32 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
 
 
     <script>
-        var filaIndex;
+        var filaIndex = 1;
 
         $(document).ready(function() {
             $("#agregar-fila").on("click", function() {
-                filaIndex++;
-                var nuevaFila = $("#fila-1").clone();
-                nuevaFila.attr("id", "fila-" + filaIndex);
-
-                nuevaFila.find("label").each(function() {
-                    var nuevoFor = $(this).attr("for").replace("nombre1", "nombre" + filaIndex).replace("porcentaje1", "porcentaje" + filaIndex);
-                    $(this).attr("for", nuevoFor);
-                });
-
-                nuevaFila.find("input").each(function() {
-                    var nuevoId = $(this).attr("id").replace("nombre1", "nombre" + filaIndex).replace("porcentaje1", "porcentaje" + filaIndex);
-                    var nuevoName = $(this).attr("name").replace("nombre1", "nombre" + filaIndex).replace("porcentaje1", "porcentaje" + filaIndex);
-                    $(this).attr("id", nuevoId).attr("name", nuevoName).val("");
-                });
-
-                nuevaFila.find(".eliminar-fila").show();
-                nuevaFila.find(".eliminar-fila").on("click", function() {
-                    if ($("#contenedor-nombres-porcentajes .fila").length > 1) {
-                        $(this).closest(".fila").remove();
-                    } else {
-                        alert("Debe haber al menos un rubro.");
-                    }
-                });
-
-                $("#contenedor-nombres-porcentajes").append(nuevaFila);
+                agregarNuevaFila();
             });
-            $("form").on("submit", function() {
+
+            $("#formularioRubros").on("submit", function(event) {
+                event.preventDefault(); // Prevenir el envío tradicional del formulario
+
                 // Validar suma de porcentajes
                 var totalPorcentajes = 0;
-                $("input[name^='porcentaje']").each(function() {
-                    totalPorcentajes += parseFloat($(this).val());
+                var rubrosData = [];
+
+                $("input[name^='porcentajes']").each(function(index) {
+                    var porcentaje = parseFloat($(this).val());
+                    totalPorcentajes += porcentaje;
+
+                    var nombre = $("input[name^='nombres']")[index].value;
+                    var idRubro = $("input[name^='idRubros']")[index].value;
+
+                    rubrosData.push({
+                        nombre: nombre,
+                        porcentaje: porcentaje,
+                        idRubro: idRubro
+                    });
                 });
 
                 if (totalPorcentajes !== 100) {
@@ -218,13 +211,61 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                     return false; // Detener el envío del formulario
                 }
 
-                // Continuar con el envío del formulario si la validación es exitosa
-                return true;
-            });
+                // Enviar datos de rubros mediante AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: 'guardar_rubros.php', // Reemplaza con la URL correcta
+                    data: {
+                        rubrosData: JSON.stringify(rubrosData),
+                        idTema: <?php echo $idTema; ?>
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        alert(response.message); // Muestra el mensaje de respuesta
+                        //location.reload(); // Recarga la página después de guardar los rubros
+                    },
+                    error: function() {
+                        console.error("Error en la solicitud AJAX:");
+                        alert('Error al enviar los rubros'); // Maneja errores de AJAX
+                    }
 
+                });
+            });
         });
 
+        function agregarNuevaFila() {
+            // Crear una nueva fila y ajustar los atributos
+            var nuevaFila = $("<div class='fila'>");
+            nuevaFila.attr("id", "fila-" + filaIndex);
+
+            // Añadir elementos HTML a la nueva fila
+            nuevaFila.append("<label for='nombre" + filaIndex + "'>Nombre:</label>");
+            nuevaFila.append("<input type='text' id='nombre" + filaIndex + "' name='nombres[]' required>");
+            nuevaFila.append("<label for='porcentaje" + filaIndex + "'>Porcentaje :</label>");
+            nuevaFila.append("<input type='number' id='porcentaje" + filaIndex + "' name='porcentajes[]' min='0' max='100' required maxlength='3' style='width: 60px; text-align:right'>");
+            nuevaFila.append("<input type='hidden' name='idRubros[]'>");
+            nuevaFila.append("<button type='button' class='eliminar-fila btn btn-danger'>Eliminar</button>");
+
+            nuevaFila.find(".eliminar-fila").show();
+
+            // Agregar la nueva fila al contenedor
+            $("#contenedor-nombres-porcentajes").append(nuevaFila);
+
+            // Asignar el evento al botón de eliminar fila
+            nuevaFila.find(".eliminar-fila").on("click", function() {
+                if ($("#contenedor-nombres-porcentajes .fila").length > 1) {
+                    $(this).closest(".fila").remove();
+                } else {
+                    alert("Debe haber al menos un rubro.");
+                }
+            });
+
+            filaIndex++;
+        }
+    </script>
+    <script>
         function cargarRubros() {
+            console.log("Cargando rubros...");
             $.ajax({
                 type: 'POST',
                 url: 'obtener_rubros.php', // Reemplaza esto con la URL correcta de tu servidor
@@ -245,6 +286,7 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                         // Crear filas para cada rubro y porcentaje
                         for (var i = 0; i < data.rubros.length; i++) {
                             agregarFilaRubro(data.idRubros[i], data.rubros[i], data.porcentajes[i]);
+                            filaIndex++;
                         }
                     } else {
                         alert('No hay rubros disponibles para este tema.');
@@ -257,32 +299,37 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
         }
 
         function agregarFilaRubro(idRubro, rubro, porcentaje) {
-            // Construir la nueva fila
-            var nuevaFila = `
-            <div class="fila" id="fila-${filaIndex}">
-                <label for="nombre${filaIndex}">Nombre:</label>
-                <input type="text" id="nombre${filaIndex}" name="nombre${filaIndex}" required value="${rubro}">
-                <label for="porcentaje${filaIndex}">Porcentaje :</label>
-                <input type="number" id="porcentaje${filaIndex}" name="porcentaje${filaIndex}" min="0" max="100" required value="${porcentaje}">
-                <input type="hidden" name="idRubro${filaIndex}" value="${idRubro}">
-                <button type="button" class="eliminar-fila btn btn-danger">Eliminar</button>
-            </div>`;
+            // Crear una nueva fila y ajustar los atributos
+            var nuevaFila = $("<div class='fila'>");
+            nuevaFila.attr("id", "fila-" + filaIndex);
+
+            // Añadir elementos HTML a la nueva fila
+            nuevaFila.append("<label for='nombre" + filaIndex + "'>Nombre:</label>");
+            nuevaFila.append("<input type='text' id='nombre" + filaIndex + "' name='nombres[]' required value='" + rubro + "'>");
+            nuevaFila.append("<label for='porcentaje" + filaIndex + "'>Porcentaje :</label>");
+            nuevaFila.append("<input type='number' id='porcentaje" + filaIndex + "' name='porcentajes[]' min='0' max='100' required value='" + porcentaje + "' maxlength='3' style='width: 60px; text-align:right'>");
+            nuevaFila.append("<input type='hidden' name='idRubros[]' value='" + idRubro + "'>");
+            nuevaFila.append("<button type='button' class='eliminar-fila btn btn-danger'>Eliminar</button>");
+
+            nuevaFila.find(".eliminar-fila").show();
 
             // Agregar la nueva fila al contenedor
             $("#contenedor-nombres-porcentajes").append(nuevaFila);
 
             // Asignar el evento al botón de eliminar fila
-            $("#fila-" + filaIndex + " .eliminar-fila").on("click", function() {
+            nuevaFila.find(".eliminar-fila").on("click", function() {
                 if ($("#contenedor-nombres-porcentajes .fila").length > 1) {
                     $(this).closest(".fila").remove();
                 } else {
                     alert("Debe haber al menos un rubro.");
                 }
             });
-        }
 
-        
+            filaIndex++;
+        }
     </script>
+
+
 </body>
 
 </html>

@@ -113,7 +113,7 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                 $calificacionRubro = odbc_fetch_array($resultCalificacionRubro);
 
                 // Agregar campos de entrada editables
-                echo "<td><input type='text' name='calificaciones[{$calificacion['numcont']}][{$calificacionRubro['idrubrotema']}]' value='{$calificacionRubro['calificacion']}'></td>";
+                echo "<td><input type='text' name='calificaciones[{$calificacion['numcont']}][{$calificacionRubro['idrubrotema']}]' value='{$calificacionRubro['calificacion']}' ></td>";
             }
 
             // Agregar columna para el nuevo rubro

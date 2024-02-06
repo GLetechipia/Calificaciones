@@ -27,8 +27,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ";
     odbc_exec($cid, $insertCalificacionesQuery);
 
-    echo "Tema agregado exitosamente."; // Puedes cambiar el mensaje según tus necesidades
+    // Añadir nuevo rubro por default con el 100%
+    // Obtener el máximo idtemacalificar del sfkey correspondiente
+    $maxidtemacalificar = "SELECT MAX(idtemacalificar) as maximo FROM temasporcalificar WHERE sfkey='$sfkey'";
+    $Rmaxidtemacalificar = odbc_exec($cid, $maxidtemacalificar);
+
+    $Result_maxidtemacalificar = odbc_fetch_array($Rmaxidtemacalificar);
+    $Nmaxidtemacalificar = $Result_maxidtemacalificar['maximo'];
+
+    // Insertar rubro del nuevo tema
+    $insertarRubroTema = "INSERT INTO RubrodeTema(idTemaCalificar, nombreRubro, porcentaje)
+                      VALUES ($Nmaxidtemacalificar, 'Default', 100)";
+    odbc_exec($cid, $insertarRubroTema);
+
+    // Insertar (crear) la lista de alumnos con las calificaciones del nuevo rubro
+    $maxirubrotema_query = "SELECT MAX(idrubrotema) as maximo FROM rubrodeTema WHERE idtemacalificar=$Nmaxidtemacalificar";
+    $maxirubrotema_result = odbc_exec($cid, $maxirubrotema_query);
+
+    $Result_maxirubrotema = odbc_fetch_array($maxirubrotema_result);
+    $maxirubrotema = $Result_maxirubrotema['maximo'];
+
+    //$insertarCalifiacionesRubros = "insert into calificacionRubro(idRubroTema,NumCont)";
+
+    $insertCalificacionesQuery = "
+        INSERT INTO calificacionRubro (idrubroTema, numcont)
+        SELECT RubrodeTema.idRubroTema, Listas.NumCont
+        FROM (Listas INNER JOIN TemasPorCalificar ON Listas.sFKey = TemasPorCalificar.sFKey) 
+        INNER JOIN RubrodeTema ON TemasPorCalificar.idTemaCalificar = RubrodeTema.idTemaCalificar
+        WHERE (((RubrodeTema.idRubroTema)=$maxirubrotema));
+    ";
+    odbc_exec($cid, $insertCalificacionesQuery);
+
+    echo $insertCalificacionesQuery."Tema agregado exitosamente.".$maxidtemacalificar."####".$insertarRubroTema."#####".$maxirubrotema_query."####".$insertCalificacionesQuery; // Puedes cambiar el mensaje según tus necesidades
 } else {
     echo "Error: Acceso no permitido.";
 }
-?>
