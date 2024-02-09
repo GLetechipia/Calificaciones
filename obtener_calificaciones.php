@@ -84,7 +84,7 @@ WHERE (((Grupos.sFKey)='$sfkey'));
         }
 
         $tabla_html .= '</tbody></table>
-        <input type="text" id="idTemaInput" name="idTema" value="">
+        <input type="hidden" id="idTemaInput" name="idTema" value="">
 </form>';
 
         // Cerrar la conexión a la base de datos

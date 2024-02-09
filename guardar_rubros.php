@@ -10,8 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     require_once('conect.odbc.php'); // Asegúrate de tener esta conexión correcta
 
-    echo "Contenido de \$rubrosData:\n";
-    var_dump($rubrosData);
+    //echo "Contenido de \$rubrosData:\n";
+    //var_dump($rubrosData);
 
     // Obtener rubros actuales del tema
     $rubrosActuales = obtenerRubrosActuales($idTema);
@@ -109,9 +109,14 @@ function agregarNuevoRubro($idTema, $nombreRubroForm, $porcentajeRubroForm)
 
     // Consulta SQL para insertar un nuevo rubro
     $sql = "INSERT INTO rubrodetema (idtemacalificar, nombrerubro, porcentaje) VALUES ($idTema, '$nombreRubroForm', $porcentajeRubroForm)";
-
     // Ejecutar la consulta
     $result = odbc_exec($cid, $sql);
+    // Agregar las calificaciones de los nuevos rubros, por default debera de ser 0 zero
+    $insertacalifrubronuevo = "insert into calificacionrubro SELECT Max(rubrodetema.idrubrotema) AS idrubrotema, Listas.NumCont, 0 as calificacion
+    FROM (temasporcalificar INNER JOIN Listas ON temasporcalificar.sFKey = Listas.sFKey) INNER JOIN rubrodetema ON temasporcalificar.idTemaCalificar = rubrodetema.idTemaCalificar
+    WHERE (((rubrodetema.idTemaCalificar)=$idTema))
+    group by listas.numcont";
+    $result = odbc_exec($cid, $insertacalifrubronuevo);
 
     // Verificar si la consulta fue exitosa
     if ($result) {
@@ -151,12 +156,12 @@ function eliminarRubro($idRubro)
 {
     global $cid; // Asegúrate de tener $cid definido en tu contexto
 
+    //eliminar las calificaciones de los rubros
+    $sql =  "delete from calificacionrubro where idrubrotema=$idRubro";
+    $result = odbc_exec($cid, $sql);
     // Consulta SQL para eliminar el rubro
     $sql = "DELETE FROM rubrodetema WHERE idrubrotema = $idRubro";
-
-    // Ejecutar la consulta
     $result = odbc_exec($cid, $sql);
-
     // Verificar si la consulta fue exitosa
     if ($result) {
         // Éxito
@@ -171,5 +176,42 @@ function eliminarRubro($idRubro)
 
 function recalcularCalificacionTema($idTema)
 {
-    // Lógica para recalcular la calificación del tema con los nuevos datos de rubros
+    global $cid; // Asegúrate de tener $cid definido en tu contexto
+
+    if (!$cid) {
+        die("Conexión fallida: " . odbc_errormsg());
+    }
+    
+    // Consulta para obtener las calificaciones
+    $sql = "SELECT TemasPorCalificar.idTemaCalificar, CalificacionRubro.NumCont, Sum(CalificacionRubro.Calificacion*RubrodeTema.porcentaje/100) AS Calificacion
+            FROM TemasPorCalificar
+            INNER JOIN (RubrodeTema INNER JOIN CalificacionRubro ON RubrodeTema.idRubroTema = CalificacionRubro.idRubroTema) ON TemasPorCalificar.idTemaCalificar = RubrodeTema.idTemaCalificar
+            GROUP BY CalificacionRubro.NumCont, TemasPorCalificar.idTemaCalificar
+            HAVING TemasPorCalificar.idTemaCalificar = $idTema";
+    
+    $result = odbc_exec($cid, $sql);
+    
+    if ($result) {
+        // Recorre los resultados y actualiza la tabla calificaciontema
+        while ($row = odbc_fetch_array($result)) {
+            $idTemaCalificar = $row["idTemaCalificar"];
+            $numCont = $row["NumCont"];
+            $calificacion = round($row["Calificacion"]);
+    
+            // Actualiza la tabla calificaciontema con las calificaciones obtenidas
+            $updateSql = "UPDATE calificaciontema 
+                          SET calificacion = $calificacion 
+                          WHERE idtemacalificar = $idTemaCalificar AND numcont = '$numCont'";
+            
+    
+            $updateResult = odbc_exec($cid, $updateSql);
+    
+        }
+    } else {
+        echo "Error en la consulta: " . odbc_errormsg($cid);
+    }
+
+
+
+
 }

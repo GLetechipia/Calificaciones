@@ -21,10 +21,37 @@ foreach ($calificaciones as $numCont => $rubros) {
     }
 }
 
+// Consulta para obtener las calificaciones
+$sql = "SELECT TemasPorCalificar.idTemaCalificar, CalificacionRubro.NumCont, Sum(CalificacionRubro.Calificacion*RubrodeTema.porcentaje/100) AS Calificacion
+FROM TemasPorCalificar
+INNER JOIN (RubrodeTema INNER JOIN CalificacionRubro ON RubrodeTema.idRubroTema = CalificacionRubro.idRubroTema) ON TemasPorCalificar.idTemaCalificar = RubrodeTema.idTemaCalificar
+GROUP BY CalificacionRubro.NumCont, TemasPorCalificar.idTemaCalificar
+HAVING TemasPorCalificar.idTemaCalificar = $idTema";
+
+$result = odbc_exec($cid, $sql);
+
+if ($result) {
+    // Recorre los resultados y actualiza la tabla calificaciontema
+    while ($row = odbc_fetch_array($result)) {
+        $idTemaCalificar = $row["idTemaCalificar"];
+        $numCont = $row["NumCont"];
+        $calificacion = round($row["Calificacion"]);
+
+        // Actualiza la tabla calificaciontema con las calificaciones obtenidas
+        $updateSql = "UPDATE calificaciontema 
+              SET calificacion = $calificacion 
+              WHERE idtemacalificar = $idTemaCalificar AND numcont = '$numCont'";
+    echo $updateSql;
+        $updateResult = odbc_exec($cid, $updateSql);
+    }
+} else {
+    echo "Error en la consulta: " . odbc_errormsg($cid);
+}
+
+
+
 odbc_close($cid);
 
-
-//exit();
 ?>
 <!DOCTYPE html>
 <html lang="es">
