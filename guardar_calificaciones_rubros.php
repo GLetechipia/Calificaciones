@@ -41,7 +41,7 @@ if ($result) {
         $updateSql = "UPDATE calificaciontema 
               SET calificacion = $calificacion 
               WHERE idtemacalificar = $idTemaCalificar AND numcont = '$numCont'";
-    echo $updateSql;
+    //echo $updateSql;
         $updateResult = odbc_exec($cid, $updateSql);
     }
 } else {
@@ -58,7 +58,7 @@ odbc_close($cid);
 
 <head>
     <meta charset="UTF-8">
-    <title>Guardando Calificaciones...</title>
+    <title>Calificaciones Parciales</title>
     <!-- Agregar jQuery (asegúrate de que el archivo esté disponible en tu servidor) -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>

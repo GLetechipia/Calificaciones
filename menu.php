@@ -1,8 +1,6 @@
 <?php
 session_start();
-
 if (!isset($_SESSION['IdMast'])) header("Location:index.php");
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -19,7 +17,7 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/nunito.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -48,15 +46,13 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; 
-                echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo'];
+                //echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
                 ?>
 
             </div>
@@ -78,7 +74,7 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
                         <a class="collapse-item" href="asesorias.php">Asesorías</a>
                     </div>
                 </div>
-                
+
             </li>
 
             <!-- Sidebar Toggler (Sidebar) -->
@@ -103,42 +99,19 @@ if (!isset($_SESSION['IdMast'])) header("Location:index.php");
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
+                    <!-- Topbar Periodo-->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <p><?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; ?></p>
                         </div>
                     </form>
 
-                    <!-- Topbar Navbar -->
+                    <!-- Topbar Periodo -->
                     <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <!-- Nav Item - Messages -->
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
-
-
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellidos']; ?></span>

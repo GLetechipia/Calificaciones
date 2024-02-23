@@ -23,7 +23,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/nunito.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -238,55 +238,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="rubros_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Agregar rubro</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <!------------------------------------------------------------------------------------------->
-                            <div class="modal-body">
-                                <hr>
-                                <div class="row">
-                                    <div class="col-12 col-md-12">
-                                        <!-- Contenido -->
-                                        <div class="container">
-                                            <br />
-                                            <div class="form-group">
-                                                <form name="add_name" id="add_name">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered" id="dynamic_field">
-                                                            <tr>
-                                                                <td><input type="text" name="rubro[]" placeholder="Descripción" class="form-control name_list" />
-                                                                    <input type="text" name="Porcentaje[]" placeholder="%" class="form-control name_list" />
-                                                                </td>
-                                                                <td>
-                                                                    <button type="button" name="add" id="add" class="btn btn-success">Agregar Más</button>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                        <input type="button" name="submit" id="submit" class="btn btn-info" value="Guardar" />
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <!-- Fin Contenido -->
-                                    </div>
-                                </div>
-                                <!-- Fin row -->
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bootstrap core JavaScript-->
+                           <!-- Bootstrap core JavaScript-->
                 <script src="vendor/jquery/jquery.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 

@@ -1,4 +1,5 @@
 <?php
+
 /****parciales.php */
 session_start();
 if (!isset($_SESSION['IdMast'])) header("Location:index.php");
@@ -26,7 +27,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="css/estilo.css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/nunito.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -119,14 +120,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-
-                        </li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -173,8 +167,8 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
                     <!-- Page Heading -->
 
-                    <p class="mb-4"><a target="_blank" href="https://datatables.net"></a></p>
-                    <!-- DataTales Example -->
+
+                    <!-- DataTales  -->
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -273,7 +267,7 @@ require_once('conect.odbc.php'); //crea la conexión para la base de datos
 
                 <!-- Custom scripts for all pages-->
                 <script src="js/sb-admin-2.min.js"></script>
-                <script src="scripts.js" type="text/javascript"></script>
+                <script src="js/parciales.script.js" type="text/javascript"></script>
 
 </body>
 

@@ -1,5 +1,5 @@
 <?php
-$ini = parse_ini_file('config.ini'); //se lee archivo de configuración...
+$ini = parse_ini_file('Configuraciones/config.ini'); //se lee archivo de configuración...
 $dsn = $ini['odbc'];
 $usuario = $ini['username'];
 $clave = $ini['password'];

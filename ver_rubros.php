@@ -5,10 +5,10 @@ require_once('conect.odbc.php'); // crea la conexión para la base de datos
 
 // Verificar si el usuario ha iniciado sesión
 session_start();
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['IdMast'])) {
     // Redirigir a la página de inicio de sesión si no ha iniciado sesión
-    // header('Location: login.php');
-    // exit();
+    header('Location: index.php');
+    exit();
 }
 
 // Obtener el ID del tema desde el POST
@@ -102,7 +102,7 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo']; 
+                <?php echo "Periodo " . $_SESSION['periodo'] . " - " . $_SESSION['ayo'];
                 //echo "<br> http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
                 ?>
 
@@ -117,15 +117,15 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                 <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Calificaciones</h6>
-                        <a class="collapse-item" href="parciales.php">Parciales</a>
+                        <a class="collapse-item active" href="parciales.php">Parciales</a>
                         <a class="collapse-item" href="finales.php">Finales</a>
                         <h6 class="collapse-header">Académica</h6>
                         <a class="collapse-item" href="instrumentaciones.php">Instrumentaciones</a>
                         <a class="collapse-item" href="tutorias.php">Tutorías</a>
-                        <a class="collapse-item active" href="asesorias.php">Asesorías</a>
+                        <a class="collapse-item " href="asesorias.php">Asesorías</a>
                     </div>
                 </div>
-                
+
             </li>
             <hr class="sidebar-divider">
 
@@ -161,26 +161,7 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <!-- Nav Item - Messages -->
+                       
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -211,105 +192,102 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-    <h1>Calificaciones - <?php echo $datosTema['Materia'] ?> - <?php echo $datosTema['nombreTema'] ?></h1>
+                    <h1 class="h3 mb-4 text-gray-800"><a href="parciales.php" class="btn btn-info">PARCIALES</a> - <a href="#" class="btn btn-info"><?php echo $datosTema['Materia'] ?></a> - <a href="#" class="btn btn-info"> <?php echo $datosTema['nombreTema'] ?></a></h1>
 
-    <form action="guardar_calificaciones_rubros.php" method="post">
-        <input type="hidden" name="idTema" value="<?php echo $idTema; ?>">
+                    <form action="guardar_calificaciones_rubros.php" method="post">
+                        <input type="hidden" name="idTema" value="<?php echo $idTema; ?>">
 
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-            <tr>
-                <th>Numero de Control</th>
-                <th>Nombre</th>
-                <?php
-                // Agregar encabezados de rubros dinámicamente
-                foreach ($rubros as $idRubro => $rubro) {
-                    echo "<th>{$rubro['nombre']} {$rubro['porcentaje']}%</th>";
-                }
-                ?>
-            </tr>
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <tr>
+                                <th>Numero de Control</th>
+                                <th>Nombre</th>
+                                <?php
+                                // Agregar encabezados de rubros dinámicamente
+                                foreach ($rubros as $idRubro => $rubro) {
+                                    echo "<th>{$rubro['nombre']} <br> {$rubro['porcentaje']}%</th>";
+                                }
+                                ?>
+                            </tr>
 
-            <?php
-            // Mostrar datos de calificaciones
-            while ($calificacion = odbc_fetch_array($resultCalificaciones)) {
-                echo "<tr>";
-                echo "<td>{$calificacion['numcont']}</td>";
-                echo "<td>{$calificacion['ape']} {$calificacion['nom']}</td>";
+                            <?php
+                            // Mostrar datos de calificaciones
+                            while ($calificacion = odbc_fetch_array($resultCalificaciones)) {
+                                echo "<tr>";
+                                echo "<td>{$calificacion['numcont']}</td>";
+                                echo "<td>{$calificacion['ape']} {$calificacion['nom']}</td>";
 
-                // Obtener las calificaciones específicas de cada rubro
-                foreach ($rubros as $idRubro => $rubro) {
-                    // Consulta para obtener la calificación de cada rubro
-                    $consultaCalificacionRubro = "SELECT calificacionRubro.calificacion
+                                // Obtener las calificaciones específicas de cada rubro
+                                foreach ($rubros as $idRubro => $rubro) {
+                                    // Consulta para obtener la calificación de cada rubro
+                                    $consultaCalificacionRubro = "SELECT calificacionRubro.calificacion
                                                FROM calificacionRubro
                                                WHERE calificacionRubro.NumCont = '{$calificacion['numcont']}' 
                                                AND calificacionRubro.idRubroTema = $idRubro;";
-                    
-                    $resultCalificacionRubro = odbc_exec($cid, $consultaCalificacionRubro);
-                    $calificacionRubro = odbc_fetch_array($resultCalificacionRubro);
 
-                    // Agregar campos de entrada editables
-                    echo "<td><input class='form-control' type='text' name='calificaciones[{$calificacion['numcont']}][$idRubro]' value='{$calificacionRubro['calificacion']}' maxlength='3' style='width: 60px; text-align:right'></td>";
-                }
+                                    $resultCalificacionRubro = odbc_exec($cid, $consultaCalificacionRubro);
+                                    $calificacionRubro = odbc_fetch_array($resultCalificacionRubro);
 
-                echo "</tr>";
-            }
-            odbc_close($cid);
-            ?>
-        </table>
+                                    // Agregar campos de entrada editables
+                                    echo "<td><input class='form-control' type='text' name='calificaciones[{$calificacion['numcont']}][$idRubro]' value='{$calificacionRubro['calificacion']}' maxlength='3' style='width: 60px; text-align:right'></td>";
+                                }
 
-        <button type="submit" class="btn btn-primary">Guardar Calificaciones</button>
-    </form>
+                                echo "</tr>";
+                            }
+                            odbc_close($cid);
+                            ?>
+                        </table>
 
-    <!-- Botón para abrir el modal de rubros -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rubrosModal" onclick="cargarRubros()">
-        Agregar/Editar Rubros
-    </button>
+                        <button type="submit" class="btn btn-primary">Guardar Calificaciones</button>
+                        <!-- Botón para abrir el modal de rubros -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rubrosModal" onclick="cargarRubros()">
+                            Agregar/Editar Rubros
+                        </button>
+                    </form>
 
-    <!-- Resto del código (tabla, formulario, etc.) -->
-
-    <!-- Modal de rubros -->
-    <div class="modal fade" id="rubrosModal" tabindex="-1" role="dialog" aria-labelledby="rubrosModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="rubrosModalLabel">Agregar/Editar Rubros</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Contenido del modal -->
-                    <form method="post" action="guardar_rubros.php" id="formularioRubros">
-                        <div id="contenedor-nombres-porcentajes">
-                            <!-- La primera fila se mantiene, solo para clonarla después -->
-                            <div class="fila" id="fila-0">
-                                <label for="nombre0">Nombre:</label>
-                                <input type="text" class="nombre" name="nombres[]" required value="Asistencia">
-                                <label for="porcentaje0">Porcentaje :</label>
-                                <input type="number" class="porcentaje" name="porcentajes[]" min="0" max="100" required value="50" style="width: 60px; text-align:right">
-                                <input type="hidden" class="idRubro" name="idRubros[]" value="2">
-                                <button type="button" class="eliminar-fila btn btn-danger" style="display:none">Eliminar</button>
+                    <!-- Modal de rubros -->
+                    <div class="modal fade" id="rubrosModal" tabindex="-1" role="dialog" aria-labelledby="rubrosModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="rubrosModalLabel">Agregar/Editar Rubros</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Contenido del modal -->
+                                    <form method="post" action="guardar_rubros.php" id="formularioRubros">
+                                        <div id="contenedor-nombres-porcentajes">
+                                            <!-- La primera fila se mantiene, solo para clonarla después -->
+                                            <div class="fila" id="fila-0">
+                                                <label for="nombre0">Nombre:</label>
+                                                <input type="text" class="nombre" name="nombres[]" required value="Asistencia">
+                                                <label for="porcentaje0">Porcentaje :</label>
+                                                <input type="number" class="porcentaje" name="porcentajes[]" min="0" max="100" required value="50" style="width: 60px; text-align:right">
+                                                <input type="hidden" class="idRubro" name="idRubros[]" value="2">&nbsp;
+                                                <button type="button" class="eliminar-fila btn btn-danger" style="display:none">Eliminar</button><br><br>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="button" id="agregar-fila" class="btn btn-success mr-2">
+                                                <i class="bi bi-plus"></i> Agregar
+                                            </button>
+                                            <input type="submit" value="Guardar" class="btn btn-success bi bi-plus">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <p class="mensaje-eliminar-rubro text-danger">
+                                        Recuerde que, si elimina un rubro, las calificaciones relacionadas a éste se eliminarán.
+                                    </p>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <button type="button" id="agregar-fila" class="btn btn-success mr-2">
-                                <i class="bi bi-plus"></i> Agregar Nombre y Porcentaje
-                            </button>
-                            <input type="submit" value="Guardar Rubros" class="btn btn-success">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <p class="mensaje-eliminar-rubro text-danger">
-                        Recuerde que si elimina un rubro, las calificaciones relacionadas a este se eliminarán.
-                    </p>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                    </div>
 
-    <!-- Bootstrap JS -->
-    </div>
+                    <!-- Bootstrap JS -->
+                </div>
                 <!-- /.container-fluid -->
 
             </div>
@@ -417,12 +395,12 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
             nuevaFila.attr("id", "fila-" + filaIndex);
 
             // Añadir elementos HTML a la nueva fila
-            nuevaFila.append("<label for='nombre" + filaIndex + "'>Nombre:</label>");
+            nuevaFila.append("<label for='nombre" + filaIndex + "'>Nombre: </label>");
             nuevaFila.append("<input type='text' id='nombre" + filaIndex + "' name='nombres[]' required>");
-            nuevaFila.append("<label for='porcentaje" + filaIndex + "'>Porcentaje :</label>");
+            nuevaFila.append("<label for='porcentaje" + filaIndex + "'>% : </label>");
             nuevaFila.append("<input type='number' id='porcentaje" + filaIndex + "' name='porcentajes[]' min='0' max='100' required maxlength='3' style='width: 60px; text-align:right'>");
             nuevaFila.append("<input type='hidden' name='idRubros[]'>");
-            nuevaFila.append("<button type='button' class='eliminar-fila btn btn-danger'>Eliminar</button>");
+            nuevaFila.append("&nbsp;<button type='button' class='eliminar-fila btn btn-danger'>Eliminar</button><br><br>");
 
             nuevaFila.find(".eliminar-fila").show();
 
@@ -482,12 +460,12 @@ while ($rubro = odbc_fetch_array($resultRubros)) {
             nuevaFila.attr("id", "fila-" + filaIndex);
 
             // Añadir elementos HTML a la nueva fila
-            nuevaFila.append("<label for='nombre" + filaIndex + "'>Nombre:</label>");
+            nuevaFila.append("<label for='nombre" + filaIndex + "'>Nombre: </label>");
             nuevaFila.append("<input type='text' id='nombre" + filaIndex + "' name='nombres[]' required value='" + rubro + "'>");
-            nuevaFila.append("<label for='porcentaje" + filaIndex + "'>Porcentaje :</label>");
+            nuevaFila.append("<label for='porcentaje" + filaIndex + "'> %: </label>");
             nuevaFila.append("<input type='number' id='porcentaje" + filaIndex + "' name='porcentajes[]' min='0' max='100' required value='" + porcentaje + "' maxlength='3' style='width: 60px; text-align:right'>");
             nuevaFila.append("<input type='hidden' name='idRubros[]' value='" + idRubro + "'>");
-            nuevaFila.append("<button type='button' class='eliminar-fila btn btn-danger'>Eliminar</button>");
+            nuevaFila.append("&nbsp;<button type='button' class='eliminar-fila btn btn-danger'>Eliminar</button><br><br>");
 
             nuevaFila.find(".eliminar-fila").show();
 

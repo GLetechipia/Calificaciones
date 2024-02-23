@@ -1,7 +1,7 @@
 <?php
 // guardar_rubros_porcentaje.php
 require_once('conect.odbc.php'); //crea la conexión para la base de datos
-print_r($_POST);
+//print_r($_POST);
 $idTema = $_POST['idTema'];
 
 // Recorrer los datos del formulario

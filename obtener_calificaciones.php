@@ -1,5 +1,5 @@
 <?php
-// obtener_calificaciones.php
+// obtener_calificaciones.php /Obtiene la calificación de los temas , en caso de no tener se muestra la lista de alumnos.
 //var_dump($_POST);
 
 if (isset($_POST['sFKey'])) {
@@ -12,8 +12,8 @@ WHERE (((Grupos.sFKey)='$sfkey'));
 ";
 
     $result = odbc_exec($cid, $consulta);
-    $row = odbc_result($result,1);
-    echo "<h1>".utf8_encode($row)."</h1>";
+    $row = odbc_result($result, 1);
+    echo "<h1>" . utf8_encode($row) . "</h1>";
 
     // Consulta PIVOT para obtener la lista de alumnos y calificaciones por temas
     $consulta = "TRANSFORM Sum(CalificacionTema.calificacion) AS calificacion
@@ -27,17 +27,27 @@ WHERE (((Grupos.sFKey)='$sfkey'));
                  GROUP BY alumnos.numcont, alumnos.nom, alumnos.ape order by alumnos.ape
                  PIVOT temasporcalificar.nombretema";
 
-                 
-
     $result = odbc_exec($cid, $consulta);
 
     // Obtener el número de campos y los nombres de los campos
     $numFields = odbc_num_fields($result);
+
+    if ($numFields < 4) { // Si no existen temas hay que mostrar mínimo la lista de alumnos
+        $consulta = "SELECT alumnos.numcont, alumnos.nom, alumnos.ape
+                    FROM ((alumnos INNER JOIN Listas ON alumnos.NumCont = Listas.NumCont) )
+                    WHERE Listas.sFKey='$sfkey'
+                    GROUP BY alumnos.numcont, alumnos.nom, alumnos.ape order by alumnos.ape";
+        $result = odbc_exec($cid, $consulta);
+        // Obtener el número de campos y los nombres de los campos
+        $numFields = odbc_num_fields($result);
+    }
+
     $fieldNames = array();
     for ($i = 1; $i <= $numFields; $i++) {
         $fieldNames[] = odbc_field_name($result, $i);
     }
-    if (count($fieldNames) > 3) {
+
+    if (count($fieldNames) > 0) {
         // Construir la tabla HTML con la lista de alumnos y calificaciones
         $tabla_html = '<form id="verRubrosForm" method="post" action="ver_rubros.php">
                         <table class="table table-bordered">
@@ -56,7 +66,7 @@ WHERE (((Grupos.sFKey)='$sfkey'));
             $idTemaCalificar = odbc_result($resultIdTema, 1);
 
             // Mostrar un enlace o botón en el encabezado del tema
-            $tabla_html .= '<th>';          
+            $tabla_html .= '<th>';
             $tabla_html .= '<a href="#" id="verRubros" data-idtema="' . urlencode($idTemaCalificar) . '">' . $nombreTema . '</a>';
             $tabla_html .= '</th>';
         }
@@ -110,13 +120,9 @@ while ($row = odbc_fetch_array($resultTemas)) {
 }
 ?>
 
-
-    <!-- Campo oculto para enviar el ID del tema -->
-    
-
 <!-- Modal para Agregar/Quitar Temas -->
 <div class="modal fade" id="agregarQuitarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar/Quitar Temas</h5>
@@ -127,29 +133,53 @@ while ($row = odbc_fetch_array($resultTemas)) {
             <div class="modal-body">
                 <!-- Formulario para agregar o quitar temas -->
                 <form id="agregarQuitarForm">
-                    <div class="form-group">
-                        <label for="nombreTema">Nombre del Tema:</label>
-                        <input type="text" class="form-control" id="nombreTema" name="nombreTema" placeholder="Escribe un nuevo tema o selecciona uno existente">
+                    <!-- Campo "Nombre del Tema" -->
+                    <div class="form-group row align-items-center">
+                        <label for="nombreTema" class="col-sm-3 col-form-label">Nombre del Tema:</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="nombreTema" name="nombreTema" placeholder="Escribe un nuevo tema">
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-success" onclick="agregarTema()">Agregar Tema</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="temasActuales">Temas Actuales:</label>
-                        <select class="form-control" id="temasActuales" name="temasActuales">
-                            <?php
-                            // Mostrar las opciones de temas actuales
-                            foreach ($temasActuales as $tema) {
-                                echo '<option value="' . $tema . '">' . $tema . '</option>';
-                            }
-                            ?>
-                        </select>
+
+                    <!-- Campo "Temas Actuales" -->
+                    <div class="form-group row align-items-center">
+                        <label for="temasActuales" class="col-sm-3 col-form-label">Temas Actuales:</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="temasActuales" name="temasActuales">
+                                <?php
+                                // Mostrar las opciones de temas actuales
+                                foreach ($temasActuales as $tema) {
+                                    echo '<option value="' . $tema . '">' . $tema . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-danger" onclick="quitarTema()">Quitar Tema</button>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-success" onclick="agregarTema()">Agregar Tema</button>
-                    <button type="button" class="btn btn-danger" onclick="quitarTema()">Quitar Tema</button>
+
+                    <!-- Mensaje y botones en la parte inferior -->
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <p class="mensaje-eliminar-rubro text-danger">
+                                Recuerde que al eliminar un tema, se eliminarán las calificaciones, rubros y calificaciones de rubros.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Definir el modal -->
 <div class="modal" id="mensajeModal">
     <div class="modal-dialog">
@@ -215,29 +245,33 @@ while ($row = odbc_fetch_array($resultTemas)) {
 
     function quitarTema() {
         var temaSeleccionado = $('#temasActuales').val();
-        // Si hay un tema seleccionado, quitar el tema
-        if (temaSeleccionado.trim() !== '') {
-            $.ajax({
-                type: 'POST',
-                url: 'quitar_tema.php', // Reemplaza con la ruta correcta a tu script PHP
-                data: {
-                    sFKey: '<?php echo $sfkey; ?>',
-                    nombreTema: temaSeleccionado
-                },
-                success: function(response) {
-                    // Lógica adicional después de quitar el tema (si es necesario)
-                    console.log(response);
-                    // Ver la lista después de quitar el tema
 
-                    // Mostrar mensaje modal después de quitar el tema
-                    mostrarMensaje('Tema y calificaciones asociadas quitados exitosamente.');
-                    activarModal();
-                    setTimeout(() => verlista('<?php echo $sfkey; ?>'), 3500);
-                },
-                error: function(error) {
-                    console.error(error);
-                }
-            });
+        // Si hay un tema seleccionado, mostrar confirmación
+        if (temaSeleccionado.trim() !== '') {
+            if (confirm('¿Estás seguro de que deseas quitar el tema y sus calificaciones asociadas?')) {
+                // El usuario confirmó, proceder con la eliminación
+                $.ajax({
+                    type: 'POST',
+                    url: 'quitar_tema.php', // Reemplaza con la ruta correcta a tu script PHP
+                    data: {
+                        sFKey: '<?php echo $sfkey; ?>',
+                        nombreTema: temaSeleccionado
+                    },
+                    success: function(response) {
+                        // Lógica adicional después de quitar el tema (si es necesario)
+                        console.log(response);
+                        // Ver la lista después de quitar el tema
+
+                        // Mostrar mensaje modal después de quitar el tema
+                        mostrarMensaje('Tema y calificaciones asociadas quitados exitosamente.');
+                        activarModal();
+                        setTimeout(() => verlista('<?php echo $sfkey; ?>'), 3500);
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            }
         }
 
         // Limpiar el campo de entrada después de quitar el tema
