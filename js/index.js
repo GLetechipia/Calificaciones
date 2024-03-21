@@ -6,7 +6,7 @@ function submitForm() {
         success: function(response) {
             if (response === 'success') {
                 // Redireccionar a la página de menú si el acceso es exitoso
-                window.location.href = 'menu.php';
+                window.location.href = 'index.php';
             } else {
                 // Mostrar el mensaje de error
                 showErrorModal(response);

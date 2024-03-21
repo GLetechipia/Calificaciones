@@ -50,7 +50,7 @@ WHERE (((Grupos.sFKey)='$sfkey'));
     if (count($fieldNames) > 0) {
         // Construir la tabla HTML con la lista de alumnos y calificaciones
         $tabla_html = '<form id="verRubrosForm" method="post" action="ver_rubros.php">
-                        <table class="table table-bordered">
+                        <table class="table table-responsive table-hover" id="detallecalificaciones">
                         <thead>
                             <tr>
                                 <th>Número de Control</th>
@@ -109,6 +109,8 @@ WHERE (((Grupos.sFKey)='$sfkey'));
 }
 
 echo '<button class="btn btn-primary" data-toggle="modal" data-target="#agregarQuitarModal">Agregar/Quitar Temas</button>';
+echo '<button class="btn btn-primary" onclick="exportReportToExcel()">Exportar a excel</button>';
+
 
 // Consulta para obtener los temas actuales
 $consultaTemas = "SELECT DISTINCT nombretema FROM TemasPorCalificar WHERE sfkey='$sfkey'";
@@ -166,7 +168,7 @@ while ($row = odbc_fetch_array($resultTemas)) {
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <p class="mensaje-eliminar-rubro text-danger">
-                                Recuerde que al eliminar un tema, se eliminarán las calificaciones, rubros y calificaciones de rubros.
+                                Recuerde que al eliminar un tema, se eliminarán las calificaciones del tema, los rubros y las calificaciones de los rubros.
                             </p>
                         </div>
                     </div>
@@ -296,5 +298,15 @@ while ($row = odbc_fetch_array($resultTemas)) {
     // Función para activar el modal mediante el botón oculto
     function activarModal() {
         $('#btnMostrarModal').trigger('click');
+    }
+
+    function exportReportToExcel() {
+        let table = document.getElementById("detallecalificaciones");
+        TableToExcel.convert(table[0], {
+            name: `file.xlsx`,
+            sheet: {
+                name: 'Sheet 1'
+            }
+        });
     }
 </script>

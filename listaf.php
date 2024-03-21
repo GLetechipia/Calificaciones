@@ -39,7 +39,7 @@ $sfkey = $_POST["sfkey"];
                 <div class="col-xl-12 col-sm-6">
                     <!---inicia la tabla que muestra el listado para la captura de calificaciones--->
                     <form name="calif" id="calif" method="post">
-                        <table class="table table-bordered" id="dataTable" cellspacing="0">
+                        <table class="table table-responsive table-hover" id="dataTable" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>N. Control</th>

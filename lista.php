@@ -2,7 +2,7 @@
 session_start();
 //para la base de datos
 require_once('conect.odbc.php'); //crea la conexión para la base de datos
-    
+
 $sfkey = $_POST["sfkey"];
 echo $sfkey;
 
@@ -34,10 +34,9 @@ echo $sfkey;
         <!-- /Content Section -->
 
 
-        
+
         <!-- // Modal -->
-        <!--------------------------------------------------------------------------------------->
-        <!--------------------------------------------------------------------------------------->
+
         <!--------------------------------------------------------------------------------------->
         <div class="row">
             <div class="col-12 col-md-12">
@@ -49,7 +48,7 @@ echo $sfkey;
 
                 <div class="col-xl-12 col-sm-6">
                     <!------>
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-responsive table-hover" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Numero de control</th>
@@ -59,23 +58,23 @@ echo $sfkey;
                             </tr>
                             <tr>
                                 <?php
-                                    
-                                    $consulta="SELECT Alumnos.NumCont, Alumnos.Ape+' '+Alumnos.Nom AS Alumno, Listas.G
+
+                                $consulta = "SELECT Alumnos.NumCont, Alumnos.Ape+' '+Alumnos.Nom AS Alumno, Listas.G
                                     FROM Alumnos INNER JOIN Listas ON Alumnos.NumCont=Listas.NumCont
-                                    WHERE (((Listas.sFKey) Like '".$sfkey."'))
+                                    WHERE (((Listas.sFKey) Like '" . $sfkey . "'))
                                     ORDER BY Alumnos.Ape;";
-                            
-                                        //echo $consulta;                               
-                                
-                                        $result = odbc_exec($cid,$consulta) or die (exit("Error Exect ODBC"));
-                                    
-                                        while(odbc_fetch_row($result)){
-                                        echo "<tr>";
-                                        echo "<td>".odbc_result($result,1)."</td>";
-                                        echo "<td>".odbc_result($result,2)."</td>";
-                                        //echo "<td>".odbc_result($result,3)."</td>";
-                                        //echo "<td>".odbc_result($result,14)."</td>";
-                                        } 
+
+                                //echo $consulta;                               
+
+                                $result = odbc_exec($cid, $consulta) or die(exit("Error Exect ODBC"));
+
+                                while (odbc_fetch_row($result)) {
+                                    echo "<tr>";
+                                    echo "<td>" . odbc_result($result, 1) . "</td>";
+                                    echo "<td>" . odbc_result($result, 2) . "</td>";
+                                    //echo "<td>".odbc_result($result,3)."</td>";
+                                    //echo "<td>".odbc_result($result,14)."</td>";
+                                }
                                 ?>
                             </tr>
                     </table>
@@ -88,4 +87,4 @@ echo $sfkey;
 
             </div>
         </div>
-<?php odbc_close($cid); ?>
+        <?php odbc_close($cid); ?>
