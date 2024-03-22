@@ -2,7 +2,7 @@
 session_start();
 if (isset($_SESSION['IdMast'])) header("Location: menu.php");
 if (isset($_SESSION['numero_control'])) header("Location: alu/menu.php");
-if (isset($_SESSION['administradores'])) header("Location: admin/menu.php");
+if (isset($_SESSION['administradores'])) header("Location: admin/index.php");
 
 
 $error_message = '';

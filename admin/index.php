@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['numcont'])) header("Location:index.php");
+if (!isset($_SESSION['administradores'])) header("Location:../index.php");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,11 +16,11 @@ if (!isset($_SESSION['numcont'])) header("Location:index.php");
     <title>SICENETXv2</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="css/nunito.css" rel="stylesheet">
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/nunito.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -36,7 +36,7 @@ if (!isset($_SESSION['numcont'])) header("Location:index.php");
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <!---- AQUI VA LA IMAGEN DEL LOGO DEL TEC...---->
 
-                <img class="mb-4" src="img/LogoTecLoretoOriginal.svg" style="margin-top: 20px; height: 40px; width: 40px;">
+                <img class="mb-4" src="../img/LogoTecLoretoOriginal.svg" style="margin-top: 20px; height: 40px; width: 40px;">
 
 
                 <div class="sidebar-brand-text mx-3">ITS Loreto</div>
@@ -114,8 +114,8 @@ if (!isset($_SESSION['numcont'])) header("Location:index.php");
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['nombre'] . ' ' . $_SESSION['apellidos']; ?></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['nombre']; ?> </span>
+                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -186,14 +186,15 @@ if (!isset($_SESSION['numcont'])) header("Location:index.php");
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="../js/sb-admin-2.min.js"></script>
+
 
 </body>
 
